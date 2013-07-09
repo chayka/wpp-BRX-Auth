@@ -146,9 +146,7 @@ class wpp_BRX_Auth {
 
     public static function parseRequest(){
 //        Util::print_r($_SERVER);
-        if(empty($_SESSION)){
-            @session_start();
-        }
+        Util::sessionStart();
         self::hideActivationKey();
 //        if(strpos($_SERVER['REQUEST_URI'], 'wp-login.php')){
 //            $action = Util::getItem($_REQUEST, 'action', 'login');
