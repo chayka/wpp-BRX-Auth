@@ -147,7 +147,7 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
             'user_login'=>$login, 
             'user_password'=>$pass, 
             'rememberme'=>$rememberme), $secure_cookie);
-        if(BlockadeHelper::isBlocked() && !in_array('administrator', $user->roles)){
+        if(BlockadeHelper::isBlocked() && (!$user || is_wp_error($user) || !in_array('administrator', $user->roles))){
             JsonHelper::respondError(NlsHelper::_('error_site_blocked'), 'error_site_blocked');
         }
 
