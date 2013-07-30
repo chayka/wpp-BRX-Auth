@@ -50,46 +50,18 @@ class wpp_BRX_Auth {
 
     }
 
-    public static function excerptLength(){
-        return 20;
-    }
-    
     public static function addJQueryWidgets(){
-        wp_enqueue_style('jquery-ui');
-        wp_enqueue_script('jquery');
-        wp_enqueue_script('jquery-effects-fade');
-        wp_enqueue_script('jquery-effects-drop');
-        wp_enqueue_script('jquery-effects-blind');
-        wp_enqueue_script('jquery-ui-widget');
-        wp_enqueue_script('jquery-ui-templated');
-        wp_enqueue_script('jquery-brx-modalBox');
-        wp_enqueue_style('jquery-brx-spinner');
-        wp_enqueue_script('jquery-brx-spinner');
-        wp_print_scripts();
-        
-        ?>
-                    
-        <div widget="generalSpinner"></div>
-        <div widget="modalBox"></div>    
-        <script>
-        jQuery(document).ready(function($) {
-            $.ui.parseWidgets('<?php echo WPP_BRX_AUTH_URL?>res/js/');
-        });        
-        </script>
-                    
-        <?php
+        ZF_Core::addJQueryWidgets();
     }
     
     public static function registerResources($minimize = false){
-//        wp_register_style('se-control-panel', WPP_BRX_AUTH_URL.'res/css/bem-se_control_panel.less');
-//        wp_register_style('se-search-options', WPP_BRX_AUTH_URL.'res/css/bem-se_search_options.less');
-//        wp_register_script('se-control-panel', WPP_BRX_AUTH_URL.'res/js/jquery.se.controlPanel.js', array('jquery-brx-form', 'jquery-ui-progressbar'));
-//        wp_register_style('se-setup-form', WPP_BRX_AUTH_URL.'res/css/bem-se_setup.less');
 //        NlsHelper::setCurrentPlugin(__FILE__);
         NlsHelper::registerScriptNls('jquery-brx-authForm-nls', 'jquery.brx.authForm.js');
+        NlsHelper::registerScriptNls('backbone-brx-authForm-nls', 'brx.AuthForm.view.js');
         wp_register_style('jquery-brx-authForm', WPP_BRX_AUTH_URL.'res/css/bem-authForm.less');
         wp_register_script('jquery-brx-authForm', WPP_BRX_AUTH_URL.'res/js/jquery.brx.authForm.js', array('jquery-brx-form', 'jquery-brx-authForm-nls'));
-
+        wp_register_script('backbone-brx-authForm', WPP_BRX_AUTH_URL.'res/js/brx.AuthForm.view.js', array('backbone-brx', 'jquery-brx-placeholder', 'backbone-brx-authForm-nls'));
+//        wp_print_scripts(array('jquery-brx-authForm'));
     }
     
     public static function registerActions(){
@@ -99,6 +71,8 @@ class wpp_BRX_Auth {
         add_action('parse_request', array('wpp_BRX_Auth', 'parseRequest'));
 //        add_action('wp_footer', array('wpp_BRX_Auth', 'addJQueryWidgets'));
 //        add_action('wp_head', array('wpp_BRX_Auth', 'addLoginForm'));
+        add_action('wp_footer', array('wpp_BRX_Auth', 'renderLoginForm'));
+        add_action('wp_footer', array('BackboneHelper', 'populateUser'));
         add_action('init', array('wpp_BRX_Auth', 'hideActivationKey'));
         
     }
@@ -186,7 +160,8 @@ class wpp_BRX_Auth {
         $view = new Zend_View();
         NlsHelper::setNlsDir(WPP_BRX_AUTH_PATH.'nls');
         $view->setScriptPath(WPP_BRX_AUTH_PATH.'application/views/scripts/auth');
-        $t = 'jquery.brx.authForm.phtml';
+//        $t = 'jquery.brx.authForm.phtml';
+        $t = 'brx.AuthForm.view.phtml';
         if(!empty($_SESSION['authpopup'])){
             $view->screen = $_SESSION['authpopup'];
             $view->popup = 'true';
@@ -213,7 +188,8 @@ class wpp_BRX_Auth {
             echo $view->render($t);
         }
         wp_enqueue_style('jquery-brx-authForm');
-        wp_enqueue_script('jquery-brx-authForm');
+        wp_enqueue_script('backbone-brx-authForm');
+//        wp_print_scripts(array('jquery-brx-authForm'));
     }
     
     public static function addLoginForm(){
