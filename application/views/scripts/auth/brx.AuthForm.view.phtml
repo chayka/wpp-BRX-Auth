@@ -18,6 +18,7 @@ NlsHelper::load('views/auth/authForm');
             <button>linkedin</button>
         </div-->
         <form attachPoint="formLogin" attachEvent="submit: buttonLoginClicked">
+            <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
             <div class="form_field email_login" attachPoint="fields.email1" check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>">
                 <label for="email"><?php NlsHelper::__('label_email')?>:</label>
                 <div class="form_field-input_box">
@@ -38,6 +39,7 @@ NlsHelper::load('views/auth/authForm');
     <div class="form_screen screen_join" attachPoint="screens.join" screen-title="<?php NlsHelper::__('header_join_screen')?>">
         <h2><?php NlsHelper::__('header_join_screen')?></h2>
         <form attachPoint="formJoin" attachEvent="submit: buttonJoinClicked">
+            <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
             <div class="form_field email_join" attachPoint="fields.email2" check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>">
                 <label for="email"><?php NlsHelper::__('label_email')?>:</label>
                 <div class="form_field-input_box">
@@ -64,6 +66,7 @@ NlsHelper::load('views/auth/authForm');
     <div class="form_screen screen_forgot_password" attachPoint="screens.forgotPassword" screen-title="<?php NlsHelper::__('header_forgot_password_screen')?>">
         <h2><?php NlsHelper::__('header_forgot_password_screen')?></h2>
             <form attachPoint="formForgotPassword" attachEvent="submit: buttonSendCodeClicked">
+                <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
                 <div class="form_box-comments">
                     <?php NlsHelper::__('message_forgot_password')?>
                 </div>
@@ -79,6 +82,7 @@ NlsHelper::load('views/auth/authForm');
     <div class="form_screen screen_change_password" attachPoint="screens.changePassword" screen-title="<?php NlsHelper::__('header_change_password_screen');?>">
         <h2><?php NlsHelper::__('header_change_password_screen');?></h2>
             <form attachPoint="formChangePassword" attachEvent="submit: buttonChangePasswordClicked">
+                <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
                 <div class="form_field passwordOld" attachPoint="fields.passwordOld">
                     <label for="passOld"><?php NlsHelper::__('label_old_pass');?>:</label>
                     <div class="form_field-input_box">
