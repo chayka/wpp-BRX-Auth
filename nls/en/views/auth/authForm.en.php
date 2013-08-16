@@ -23,7 +23,7 @@ return array(
     'button_logout' => 'Sing out',
     'button_cancel' => 'Cancel',
     'link_forgot_password' => 'Forgot password?',
-    'link_login' => 'Sing in',
+    'link_login' => 'Sign in',
     'link_join' => 'Join us',
     'link_change_password' => 'Change password',
     
