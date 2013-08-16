@@ -207,10 +207,6 @@
             this.getMessageBox().hide('fade', {}, 200);
         },
         
-        clearMessage: function(){
-            this.getMessageBox().text('').hide();
-        },
-        
         showScreen: function(screen){
             this.clearForm();
             screen = screen || 'login';
@@ -220,6 +216,8 @@
             this.clearMessage();
             var screenBox = this.get('screens')[screen];
             screenBox.show();
+            var firstInput = screenBox.find('input[type=text]')[0];
+            console.dir({'firstInput':firstInput});
             
             var canChangePw = !$.brx.utils.empty(this.get('activationKey'));
             
@@ -272,6 +270,7 @@
                 this.getTemplate().data('dialog').option('title', this.nls('header_default'));
                 screenBox.find('h2').show();
             }
+            $(firstInput).focus();
 
         },
         
@@ -280,8 +279,8 @@
         },
         
         openLoginScreen: function(event){
-            this.showLoginScreen();
             this.getTemplate().dialog('open');
+            this.showLoginScreen();
 //            this.showModal();
         },
         
@@ -290,8 +289,8 @@
         },
         
         openJoinScreen: function(event){
-            this.showJoinScreen();
             this.getTemplate().dialog('open');
+            this.showJoinScreen();
 //            this.showModal();
         },
         
@@ -300,8 +299,8 @@
         },
         
         openForgotPasswordScreen: function(event){
-            this.showForgotPasswordScreen();
             this.getTemplate().dialog('open');
+            this.showForgotPasswordScreen();
 //            this.showModal();
         },
         
@@ -310,8 +309,8 @@
         },
         
         openChangePasswordScreen: function(event){
-            this.showChangePasswordScreen();
             this.getTemplate().dialog('open');
+            this.showChangePasswordScreen();
 //            this.showModal();
         },
         
