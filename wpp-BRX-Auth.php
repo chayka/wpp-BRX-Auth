@@ -34,7 +34,7 @@ if(!defined('ZF_CORE_PATH')){
   if ( is_plugin_active( 'wpp-ZF-Core/wpp-ZF-Core.php' ) ){
     require_once ( WP_PLUGIN_DIR . '/wpp-ZF-Core/wpp-ZF-Core.php' );
   }else{
-      throw new Exception('ZF COre plugin requred', 1);
+      return; throw new Exception('ZF COre plugin requred', 1);
   }
     
 }
