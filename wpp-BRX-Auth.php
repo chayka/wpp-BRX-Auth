@@ -31,9 +31,12 @@ function wpp_BRX_Auth_checkDependencies()
 }
 
 if(!defined('ZF_CORE_PATH')){
+    echo " [no core] ";
   if ( is_plugin_active( 'wpp-ZF-Core/wpp-ZF-Core.php' ) ){
+    echo " [is active] ";
     require_once ( WP_PLUGIN_DIR . '/wpp-ZF-Core/wpp-ZF-Core.php' );
   }else{
+    echo " [not active] ";
       return; throw new Exception('ZF COre plugin requred', 1);
   }
     
