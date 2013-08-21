@@ -30,6 +30,15 @@ function wpp_BRX_Auth_checkDependencies()
    }
 }
 
+if(!defined('ZF_CORE_PATH')){
+  if ( is_plugin_active( 'wpp-ZF-Core/wpp-ZF-Core.php' ) ){
+    require_once ( WP_PLUGIN_DIR . '/wpp-ZF-Core/wpp-ZF-Core.php' );
+  }else{
+      throw new Exception('ZF COre plugin requred', 1);
+  }
+    
+}
+
 define( 'WPP_BRX_AUTH_PATH', plugin_dir_path(__FILE__) );
 define( 'WPP_BRX_AUTH_URL', preg_replace('%^[\w\d]+\:\/\/[\w\d\.]+%', '',plugin_dir_url(__FILE__)) );
 
