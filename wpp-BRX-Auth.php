@@ -30,6 +30,7 @@ function wpp_BRX_Auth_checkDependencies()
    }
 }
 
+require_once ( WP_PLUGIN_DIR . '/wpp-ZF-Core/wpp-ZF-Core.php' );
 if(!defined('ZF_CORE_PATH')){
     echo " [no core] ";
   if ( is_plugin_active( 'wpp-ZF-Core/wpp-ZF-Core.php' ) ){
