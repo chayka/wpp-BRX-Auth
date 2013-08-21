@@ -10,6 +10,25 @@
   License: GPL2
  */
 
+register_activation_hook( __FILE__, 'wpp_BRX_Auth_checkDependencies' );
+ 
+function wpp_BRX_Auth_checkDependencies()
+{
+  require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+ 
+  if ( is_plugin_active( 'wpp-ZF-Core/wpp-ZF-Core.php' ) )
+  {
+    require_once ( WP_PLUGIN_DIR . '/wpp-ZF-Core/wpp-ZF-Core.php' );
+  }
+  else
+  {
+     // deactivate dependent plugin
+    deactivate_plugins( __FILE__);
+    //   throw new Exception('Requires another plugin!');
+   //  exit();
+    exit ('Requires another plugin!');
+   }
+}
 
 define( 'WPP_BRX_AUTH_PATH', plugin_dir_path(__FILE__) );
 define( 'WPP_BRX_AUTH_URL', preg_replace('%^[\w\d]+\:\/\/[\w\d\.]+%', '',plugin_dir_url(__FILE__)) );
