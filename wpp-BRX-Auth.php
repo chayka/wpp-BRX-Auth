@@ -10,6 +10,7 @@
   License: GPL2
  */
 
+/*
 register_activation_hook( __FILE__, 'wpp_BRX_Auth_checkDependencies' );
  
 function wpp_BRX_Auth_checkDependencies()
@@ -42,7 +43,7 @@ if(!defined('ZF_CORE_PATH')){
   }
     
 }
-
+*/
 define( 'WPP_BRX_AUTH_PATH', plugin_dir_path(__FILE__) );
 define( 'WPP_BRX_AUTH_URL', preg_replace('%^[\w\d]+\:\/\/[\w\d\.]+%', '',plugin_dir_url(__FILE__)) );
 
