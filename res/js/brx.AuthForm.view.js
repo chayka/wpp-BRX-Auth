@@ -66,7 +66,7 @@
             this.inputs('name').focus($.proxy(function(){
                 this.setFormFieldStateClear('name');
             }, this));
-            this.inputs('name').keypress($.proxy(function(event){
+            this.inputs('name').keyup($.proxy(function(event){
                 $.brx.utils.delayedCall('name-check', 500, $.proxy(this.checkNameExists, this));
             }, this));
             
@@ -349,7 +349,9 @@
         },
         
         checkNameField: function(event){
-            return (event !== undefined || this.checkRequired('name'))
+            return (event !== undefined 
+                || this.checkRequired('name'))
+//                && this.checkRegexp('name')
                 && this.checkNameExists();
         },
         
@@ -779,7 +781,7 @@
         
         checkNameExists: function(){
             var login = this.inputs('name').val();
-            if(login){
+            if(login && this.checkRegexp('name')){
                 if(this.get('validNames')[login] == 1){
                     return true;
                 }else if(this.get('validNames')[login] == 0){
@@ -819,6 +821,8 @@
                     return false;
                 }
             }
+            
+            return false;
         },
         
         

@@ -47,7 +47,7 @@ NlsHelper::load('views/auth/authForm');
                 </div>
                 <div class="form_field-tips"></div>
             </div>
-            <div class="form_field name" attachPoint="fields.name">
+            <div class="form_field name" attachPoint="fields.name" check-regexp-pattern="^[A-Za-z\d\-]+$" check-regexp-message="<?php NlsHelper::__('message_validate_username');?>">
                 <label for="name"><?php NlsHelper::__('label_username')?>:</label>
                 <div class="form_field-input_box">
                     <input type="text" name="name" class="" />
@@ -63,7 +63,7 @@ NlsHelper::load('views/auth/authForm');
             </div-->
         </form>
     </div>
-    <div class="form_screen screen_forgot_password" attachPoint="screens.forgotPassword" screen-title="<?php NlsHelper::__('header_forgot_password_screen')?>">
+    <div class="form_screen screen_forgot_password" attachPoint="screens.forgotPassword" screen-title="<?php NlsHelper::__('header_forgot_password_screen');?>">
         <h2><?php NlsHelper::__('header_forgot_password_screen')?></h2>
             <form attachPoint="formForgotPassword" attachEvent="submit: buttonSendCodeClicked">
                 <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
