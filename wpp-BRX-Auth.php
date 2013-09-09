@@ -67,6 +67,7 @@ class wpp_BRX_Auth {
     }
     
     public static function installPlugin() {
+        LessHelper::addImportDir(WPP_BRX_AUTH_PATH.'res/css');
         self::registerResources();
 //        self::registerCustomPostTypes();
 //        self::registerTaxonomies();
