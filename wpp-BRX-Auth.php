@@ -74,7 +74,7 @@ class wpp_BRX_Auth extends WpPlugin {
 //        self::registerActions();
 //        self::registerFilters();
         self::$instance = new wpp_BRX_Auth(__FILE__);
-        self::$instance->addLoginForm();
+//        self::$instance->addLoginForm();
         
 //        Util::print_r(self::$instance);
     }
@@ -101,6 +101,7 @@ class wpp_BRX_Auth extends WpPlugin {
 
 //        if($this->needStyles){
             $this->registerStyle('jquery-brx-authForm', 'bem-authForm.less');
+            wp_enqueue_style('jquery-brx-authForm');
 //        }
         $this->registerScript('jquery-brx-authForm', 'jquery.brx.authForm.js', array('jquery-brx-form', 'jquery-brx-authForm-nls'));
         $this->registerScript('backbone-brx-authForm', 'brx.AuthForm.view.js', array('backbone-brx', 'jquery-brx-placeholder', 'backbone-brx-authForm-nls'));
@@ -117,6 +118,7 @@ class wpp_BRX_Auth extends WpPlugin {
         
         $this->addAction('parse_request', 'parseRequest');
         $this->addAction('init', 'hideActivationKey');
+        $this->addAction('wp_head', 'addLoginForm');
         $this->addAction('wp_footer', 'renderLoginForm');
         add_action('wp_footer', array('BackboneHelper', 'populateUser'));
         
@@ -210,8 +212,9 @@ class wpp_BRX_Auth extends WpPlugin {
     }
     
     public function addLoginForm(){
-        $this->addAction('wp_footer', 'renderLoginForm');
-        add_action('wp_footer', array('BackboneHelper', 'populateUser'));
+        wp_enqueue_style('jquery-brx-authForm');
+//        $this->addAction('wp_footer', 'renderLoginForm');
+//        add_action('wp_footer', array('BackboneHelper', 'populateUser'));
         
     }
 
