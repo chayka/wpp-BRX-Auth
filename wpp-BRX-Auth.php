@@ -55,107 +55,91 @@ ZF_Query::registerApplication('WPP_BRX_AUTH', WPP_BRX_AUTH_PATH.'application',
         array('auth'));
 //require_once 'application/helpers/UrlHelper_wpp_BRX_Auth.php';
 
-class wpp_BRX_Auth {
+class wpp_BRX_Auth extends WpPlugin {
     const NLS_DOMAIN = "wpp_BRX_Auth";
+    protected static $instance = null;
+//    public static function baseUrl(){
+//        echo WPP_BRX_AUTH_URL;
+//    }
     
-    public static function baseUrl(){
-        echo WPP_BRX_AUTH_URL;
-    }
+//    public function dbUpdate() {
+//        WpDbHelper::dbUpdate('1.0', 'wpp_brx_auth_db_version', WPP_BRX_AUTH_PATH.'res/sql');
+//    }
     
-    public static function dbUpdate() {
-        WpDbHelper::dbUpdate('1.0', 'wpp_brx_auth_db_version', WPP_BRX_AUTH_PATH.'res/sql');
-    }
-    
-    public static function installPlugin() {
-        LessHelper::addImportDir(WPP_BRX_AUTH_PATH.'res/css');
-        self::registerResources();
-//        self::registerCustomPostTypes();
-//        self::registerTaxonomies();
-        self::registerActions();
-        self::registerFilters();
-        self::addLoginForm();
-    }
-
-    public static function registerCustomPostTypes() {
-
+    public static function initPlugin() {
+//        LessHelper::addImportDir(WPP_BRX_AUTH_PATH.'res/css');
+//        self::registerResources();
+////        self::registerCustomPostTypes();
+////        self::registerTaxonomies();
+//        self::registerActions();
+//        self::registerFilters();
+        self::$instance = new wpp_BRX_Auth(__FILE__);
+        self::$instance->addLoginForm();
+        
+//        Util::print_r(self::$instance);
     }
 
-    public static function registerTaxonomies(){
+    public function registerCustomPostTypes() {
 
     }
 
-    public static function addJQueryWidgets(){
-        ZF_Core::addJQueryWidgets();
+    public function registerTaxonomies(){
+
     }
-    
-    public static function registerResources($minimize = false){
+
+//    public static function addJQueryWidgets(){
+//        ZF_Core::addJQueryWidgets();
+//    }
+//    
+    public function registerResources($minimize = false){
 //        NlsHelper::setCurrentPlugin(__FILE__);
         NlsHelper::registerScriptNls('jquery-brx-authForm-nls', 'jquery.brx.authForm.js');
         NlsHelper::registerScriptNls('backbone-brx-authForm-nls', 'brx.AuthForm.view.js');
-        wp_register_style('jquery-brx-authForm', WPP_BRX_AUTH_URL.'res/css/bem-authForm.less');
-        wp_register_script('jquery-brx-authForm', WPP_BRX_AUTH_URL.'res/js/jquery.brx.authForm.js', array('jquery-brx-form', 'jquery-brx-authForm-nls'));
-        wp_register_script('backbone-brx-authForm', WPP_BRX_AUTH_URL.'res/js/brx.AuthForm.view.js', array('backbone-brx', 'jquery-brx-placeholder', 'backbone-brx-authForm-nls'));
-//        wp_print_scripts(array('jquery-brx-authForm'));
+//        wp_register_style('jquery-brx-authForm', WPP_BRX_AUTH_URL.'res/css/bem-authForm.less');
+//        wp_register_script('jquery-brx-authForm', WPP_BRX_AUTH_URL.'res/js/jquery.brx.authForm.js', array('jquery-brx-form', 'jquery-brx-authForm-nls'));
+//        wp_register_script('backbone-brx-authForm', WPP_BRX_AUTH_URL.'res/js/brx.AuthForm.view.js', array('backbone-brx', 'jquery-brx-placeholder', 'backbone-brx-authForm-nls'));
+
+//        if($this->needStyles){
+            $this->registerStyle('jquery-brx-authForm', 'bem-authForm.less');
+//        }
+        $this->registerScript('jquery-brx-authForm', 'jquery.brx.authForm.js', array('jquery-brx-form', 'jquery-brx-authForm-nls'));
+        $this->registerScript('backbone-brx-authForm', 'brx.AuthForm.view.js', array('backbone-brx', 'jquery-brx-placeholder', 'backbone-brx-authForm-nls'));
     }
     
-    public static function registerActions(){
-        add_action('admin_menu', array('wpp_BRX_Auth', 'registerConsolePages'));
-//        add_action('add_meta_boxes', array('wpp_BRX_Auth', 'addMetaBoxSearchOptions') );
+    public function registerActions(){
         
-        add_action('parse_request', array('wpp_BRX_Auth', 'parseRequest'));
-//        add_action('wp_footer', array('wpp_BRX_Auth', 'addJQueryWidgets'));
-//        add_action('wp_head', array('wpp_BRX_Auth', 'addLoginForm'));
-        add_action('wp_footer', array('wpp_BRX_Auth', 'renderLoginForm'));
+//        add_action('admin_menu', array('wpp_BRX_Auth', 'registerConsolePages'));
+//        
+//        add_action('parse_request', array('wpp_BRX_Auth', 'parseRequest'));
+//        add_action('wp_footer', array('wpp_BRX_Auth', 'renderLoginForm'));
+//        add_action('wp_footer', array('BackboneHelper', 'populateUser'));
+//        add_action('init', array('wpp_BRX_Auth', 'hideActivationKey'));
+        
+        $this->addAction('parse_request', 'parseRequest');
+        $this->addAction('init', 'hideActivationKey');
+        $this->addAction('wp_footer', 'renderLoginForm');
         add_action('wp_footer', array('BackboneHelper', 'populateUser'));
-        add_action('init', array('wpp_BRX_Auth', 'hideActivationKey'));
         
     }
     
-    public static function registerFilters(){
-//        add_filter('post_type_link', array('wpp_BRX_Auth', 'postPermalink'), 1, 3);
-//        add_filter('term_link', array('wpp_BRX_Auth', 'termLink'), 1, 3);
-//        add_filter( 'the_search_query', array('wpp_BRX_Auth', 'enableSearch' ));
-//        add_filter('get_sample_permalink_html', array('wpp_BRX_Auth', 'getSamplePermalinkHtml'), 1, 4);
-//        add_filter('manage_question_posts_columns', array('wpp_BRX_Auth', 'manageQuestionColumns'));
-//        add_filter('manage_edit_question_sortable_columns', array('wpp_BRX_Auth', 'questionSortableColumns'));
-//        add_action('delete_post', array('wpp_BRX_Auth', 'deletePost'), 10, 1);
-//        add_filter('excerpt_more', array('wpp_BRX_Auth', 'excerptMore'));
-//        add_filter('wp_insert_post_data', array('wpp_BRX_Auth', 'autoSlug'), 10, 1 );
-//        add_filter('post_link', array('wpp_BRX_Auth', 'postPermalink'), 1, 3);
-//        add_filter('get_comment_link', array('wpp_BRX_Auth', 'commentPermalink'), 1, 2);
-//        add_filter('wp_nav_menu_objects', array('wpp_BRX_Auth', 'wp_nav_menu_objects'), 1, 2);
-//        add_filter('media_upload_tabs', array('wpp_BRX_Auth', 'mediaUploadTabs'), 1, 1);
-//        add_filter('excerpt_length', array('wpp_BRX_Auth', 'excerpt_length'), 1, 1);
-//        add_filter('wp_nav_menu_items', array('wpp_BRX_Auth', 'wp_nav_menu_items'), 1, 2);
-//        add_filter('wp_nav_menu', array('wpp_BRX_Auth', 'wp_nav_menu'), 1, 2);
+    public function registerFilters(){
         
     }
-    public static function registerConsolePages() {
-//        add_submenu_page('edit.php?post_type='.wpp_BRX_Auth::POST_TYPE_CATALOG_ITEM, 
-//                'Импорт каталога', 'Импорт', 'update_core', 'ilat-catalogue-import-items', 
-//                array('wpp_BRX_Auth', 'renderConsolePageImportItems'), '', null); 
-//        add_submenu_page('edit.php?post_type='.wpp_BRX_Auth::POST_TYPE_CATALOG_ITEM, 
-//                'Настройка полей', 'Настройка полей', 'update_core', 'ilat-catalogue-setup-fields', 
-//                array('wpp_BRX_Auth', 'renderConsolePageSetupFields'), '', null); 
-//        add_submenu_page('edit.php?post_type='.wpp_BRX_Auth::POST_TYPE_CATALOG_ITEM, 
-//                'Настройка каталога', 'Настройка каталога', 'update_core', 'ilat-catalogue-setup-catalog', 
-//                array('wpp_BRX_Auth', 'renderConsolePageSetupCatalog'), '', null); 
-//        add_submenu_page('edit.php?post_type='.wpp_BRX_Auth::POST_TYPE_SERVICE_ITEM, 
-//                'Импорт услуг', 'Импорт', 'update_core', 'ilat-catalogue-import-services', 
-//                array('wpp_BRX_Auth', 'renderConsolePageImportServices'), '', null); 
-        add_menu_page('Аутентификация', 'Аутентификация', 'update_core', 'authentification-admin', 
-                array('wpp_BRX_Auth', 'renderConsolePageSetup'), '', null); 
+    public function registerConsolePages() {
+//        add_menu_page('Аутентификация', 'Аутентификация', 'update_core', 'authentification-admin', 
+//                array('wpp_BRX_Auth', 'renderConsolePageSetup'), '', null); 
+        $this->addConsolePage('Аутентификация', 'Аутентификация', 'update_core', 'authentification-admin', '/admin/setup-authentification');
     }
 
 
-    public static function renderConsolePageSetup(){
-       echo ZF_Query::processRequest('/admin/setup-authentification', 'WPP_BRX_AUTH');	
-    }
+//    public static function renderConsolePageSetup(){
+//       echo ZF_Query::processRequest('/admin/setup-authentification', 'WPP_BRX_AUTH');	
+//    }
 
-    public static function parseRequest(){
+    public function parseRequest(){
 //        Util::print_r($_SERVER);
         Util::sessionStart();
-        self::hideActivationKey();
+        $this->hideActivationKey();
 //        if(strpos($_SERVER['REQUEST_URI'], 'wp-login.php')){
 //            $action = Util::getItem($_REQUEST, 'action', 'login');
 //            $screen = 'login';
@@ -178,19 +162,18 @@ class wpp_BRX_Auth {
 //            die();
 //        }
     }
-    public static function hideActivationKey(){
+    public function hideActivationKey(){
         if(!empty($_GET['activationkey']) && !empty($_GET['login'])){
             $_SESSION['activationkey'] = $_GET['activationkey'];
             $_SESSION['activationlogin'] = $_GET['login'];
             $_SESSION['activationpopup'] = true;
             session_commit();
-            $server = $_SERVER['SERVER_NAME'];
             header("Location: /", true);
             die();
         }
     }
     
-    public static function renderLoginForm(){
+    public function renderLoginForm(){
         $view = new Zend_View();
         NlsHelper::setNlsDir(WPP_BRX_AUTH_PATH.'nls');
         $view->setScriptPath(WPP_BRX_AUTH_PATH.'application/views/scripts/auth');
@@ -226,23 +209,35 @@ class wpp_BRX_Auth {
 //        wp_print_scripts(array('jquery-brx-authForm'));
     }
     
-    public static function addLoginForm(){
-        add_action('wp_footer', array('wpp_BRX_Auth', 'renderLoginForm'));
+    public function addLoginForm(){
+        $this->addAction('wp_footer', 'renderLoginForm');
         add_action('wp_footer', array('BackboneHelper', 'populateUser'));
         
     }
-    
+
+    public function deletePost($postId, $post) {
+        
+    }
+
+    public function registerMetaBoxes() {
+        
+    }
+
+    public function registerSidebars() {
+        
+    }
+
+    public function savePost($postId, $post) {
+        
+    }
+
+    public static function blockStyles($block = true) {
+        $this->needStyles = !$block;
+    }
+
     
     
 }
 
 
-
-
-add_action('init', array('wpp_BRX_Auth', 'installPlugin'));
-register_uninstall_hook(__FILE__, array('wpp_BRX_Auth', 'uninstallPlugin'));
-    
-//register_sidebar(array(
-//    'id'=>'index-index',
-//    'name'=>__('Главная страница'),
-//));
+add_action('init', array('wpp_BRX_Auth', 'initPlugin'));
