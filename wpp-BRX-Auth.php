@@ -51,32 +51,17 @@ define( 'WPP_BRX_AUTH_URL', preg_replace('%^[\w\d]+\:\/\/[\w\d\.]+%', '',plugin_
 //require_once 'application/helpers/OptionHelper_wpp_BRX_Auth.php';
 //require_once 'widgets-wpp_BRX_Auth.php';
 
-ZF_Query::registerApplication('WPP_BRX_AUTH', WPP_BRX_AUTH_PATH.'application', 
-        array('auth'));
+//ZF_Query::registerApplication('WPP_BRX_AUTH', WPP_BRX_AUTH_PATH.'application', 
+//        array('auth'));
 //require_once 'application/helpers/UrlHelper_wpp_BRX_Auth.php';
 
 class wpp_BRX_Auth extends WpPlugin {
     const NLS_DOMAIN = "wpp_BRX_Auth";
     protected static $instance = null;
-//    public static function baseUrl(){
-//        echo WPP_BRX_AUTH_URL;
-//    }
     
-//    public function dbUpdate() {
-//        WpDbHelper::dbUpdate('1.0', 'wpp_brx_auth_db_version', WPP_BRX_AUTH_PATH.'res/sql');
-//    }
-    
-    public static function initPlugin() {
-//        LessHelper::addImportDir(WPP_BRX_AUTH_PATH.'res/css');
-//        self::registerResources();
-////        self::registerCustomPostTypes();
-////        self::registerTaxonomies();
-//        self::registerActions();
-//        self::registerFilters();
-        self::$instance = new wpp_BRX_Auth(__FILE__);
-//        self::$instance->addLoginForm();
-        
-//        Util::print_r(self::$instance);
+    public static function init() {
+        return self::$instance = $auth = new wpp_BRX_Auth(__FILE__, array('auth'));
+//        $auth->addSupport_ConsolePages();
     }
 
     public function registerCustomPostTypes() {
@@ -87,38 +72,23 @@ class wpp_BRX_Auth extends WpPlugin {
 
     }
 
-//    public static function addJQueryWidgets(){
-//        ZF_Core::addJQueryWidgets();
-//    }
-//    
     public function registerResources($minimize = false){
 //        NlsHelper::setCurrentPlugin(__FILE__);
         NlsHelper::registerScriptNls('jquery-brx-authForm-nls', 'jquery.brx.authForm.js');
         NlsHelper::registerScriptNls('backbone-brx-authForm-nls', 'brx.AuthForm.view.js');
-//        wp_register_style('jquery-brx-authForm', WPP_BRX_AUTH_URL.'res/css/bem-authForm.less');
-//        wp_register_script('jquery-brx-authForm', WPP_BRX_AUTH_URL.'res/js/jquery.brx.authForm.js', array('jquery-brx-form', 'jquery-brx-authForm-nls'));
-//        wp_register_script('backbone-brx-authForm', WPP_BRX_AUTH_URL.'res/js/brx.AuthForm.view.js', array('backbone-brx', 'jquery-brx-placeholder', 'backbone-brx-authForm-nls'));
-
-//        if($this->needStyles){
+        if($this->needStyles){
             $this->registerStyle('jquery-brx-authForm', 'bem-authForm.less');
             wp_enqueue_style('jquery-brx-authForm');
-//        }
+        }
         $this->registerScript('jquery-brx-authForm', 'jquery.brx.authForm.js', array('jquery-brx-form', 'jquery-brx-authForm-nls'));
         $this->registerScript('backbone-brx-authForm', 'brx.AuthForm.view.js', array('backbone-brx', 'jquery-brx-placeholder', 'backbone-brx-authForm-nls'));
     }
     
     public function registerActions(){
         
-//        add_action('admin_menu', array('wpp_BRX_Auth', 'registerConsolePages'));
-//        
-//        add_action('parse_request', array('wpp_BRX_Auth', 'parseRequest'));
-//        add_action('wp_footer', array('wpp_BRX_Auth', 'renderLoginForm'));
-//        add_action('wp_footer', array('BackboneHelper', 'populateUser'));
-//        add_action('init', array('wpp_BRX_Auth', 'hideActivationKey'));
         
         $this->addAction('parse_request', 'parseRequest');
         $this->addAction('init', 'hideActivationKey');
-        $this->addAction('wp_head', 'addLoginForm');
         $this->addAction('wp_footer', 'renderLoginForm');
         add_action('wp_footer', array('BackboneHelper', 'populateUser'));
         
@@ -128,15 +98,9 @@ class wpp_BRX_Auth extends WpPlugin {
         
     }
     public function registerConsolePages() {
-//        add_menu_page('Аутентификация', 'Аутентификация', 'update_core', 'authentification-admin', 
-//                array('wpp_BRX_Auth', 'renderConsolePageSetup'), '', null); 
         $this->addConsolePage('Аутентификация', 'Аутентификация', 'update_core', 'authentification-admin', '/admin/setup-authentification');
     }
 
-
-//    public static function renderConsolePageSetup(){
-//       echo ZF_Query::processRequest('/admin/setup-authentification', 'WPP_BRX_AUTH');	
-//    }
 
     public function parseRequest(){
 //        Util::print_r($_SERVER);
@@ -211,14 +175,11 @@ class wpp_BRX_Auth extends WpPlugin {
 //        wp_print_scripts(array('jquery-brx-authForm'));
     }
     
-    public function addLoginForm(){
-        wp_enqueue_style('jquery-brx-authForm');
-//        $this->addAction('wp_footer', 'renderLoginForm');
-//        add_action('wp_footer', array('BackboneHelper', 'populateUser'));
+    public function deletePost($postId, $post) {
         
     }
 
-    public function deletePost($postId, $post) {
+    public function savePost($postId, $post) {
         
     }
 
@@ -230,12 +191,8 @@ class wpp_BRX_Auth extends WpPlugin {
         
     }
 
-    public function savePost($postId, $post) {
-        
-    }
-
     public static function blockStyles($block = true) {
-        $this->needStyles = !$block;
+        self::$instance->needStyles = !$block;
     }
 
     
@@ -243,4 +200,4 @@ class wpp_BRX_Auth extends WpPlugin {
 }
 
 
-add_action('init', array('wpp_BRX_Auth', 'initPlugin'));
+add_action('init', array('wpp_BRX_Auth', 'init'));
