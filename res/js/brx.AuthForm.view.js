@@ -141,6 +141,10 @@
                 event.preventDefault();
                 this.openForgotPasswordScreen();
             }, this));
+            $( document ).on( "click", 'a[href*="/wp-login.php?action=changepassword"], a[href*="#change-password"]', $.proxy(function(event){
+                event.preventDefault();
+                this.openChangePasswordScreen();
+            }, this));
 //            $('a[href*="/wp-login.php?action=logout"], a[href*="#logout"]', document).click($.proxy(function(event){
             $( document ).on( "click", 'a[href*="/wp-login.php?action=logout"], a[href*="#logout"]', $.proxy(function(event){
                 event.preventDefault();
