@@ -44,8 +44,8 @@ if(!defined('ZF_CORE_PATH')){
     
 }
 */
-define( 'WPP_BRX_AUTH_PATH', plugin_dir_path(__FILE__) );
-define( 'WPP_BRX_AUTH_URL', preg_replace('%^[\w\d]+\:\/\/[\w\d\.]+%', '',plugin_dir_url(__FILE__)) );
+//define( 'WPP_BRX_AUTH_PATH', plugin_dir_path(__FILE__) );
+//define( 'WPP_BRX_AUTH_URL', preg_replace('%^[\w\d]+\:\/\/[\w\d\.]+%', '',plugin_dir_url(__FILE__)) );
 
 //require_once 'application/helpers/UrlHelper_wpp_BRX_Auth.php';
 //require_once 'application/helpers/OptionHelper_wpp_BRX_Auth.php';
@@ -62,6 +62,18 @@ class wpp_BRX_Auth extends WpPlugin {
     public static function init() {
         return self::$instance = $auth = new wpp_BRX_Auth(__FILE__, array('auth'));
 //        $auth->addSupport_ConsolePages();
+    }
+
+    /**
+     * 
+     * @return wpp_BRX_Auth
+     */
+    public static function getInstance() {
+        return self::$instance;
+    }
+
+    public static function baseUrl() {
+        echo self::getInstance()->getBaseUrl();
     }
 
     public function registerCustomPostTypes() {
