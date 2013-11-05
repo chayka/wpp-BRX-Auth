@@ -1,6 +1,6 @@
-(function( $ ) {
+(function( $, _ ) {
 //    $.widgetTemplated( "brx.authForm", $.brx.form, {
-    $.declare( "brx.AuthForm", $.brx.FormView, {
+    _.declare( "brx.AuthForm", $.brx.FormView, {
  
 //        _parentPrototype: $.ui.templated.prototype,
         
@@ -155,10 +155,10 @@
                 this.option('wpnonce',  pat.test(href)?pat.exec(href)[1]:'');
                 this.openLogoutScreen('logout');
             }, this));
-            $(document).bind('authForm.login', $.proxy(this.openLoginScreen, this))
-            $(document).bind('authForm.join', $.proxy(this.openJoinScreen, this))
-            $(document).bind('authForm.forgotPassword', $.proxy(this.openForgotPasswordScreen, this))
-            $(document).bind('authForm.changePassword', $.proxy(this.openChangePasswordScreen, this))
+            $(document).bind('authForm.login', $.proxy(this.openLoginScreen, this));
+            $(document).bind('authForm.join', $.proxy(this.openJoinScreen, this));
+            $(document).bind('authForm.forgotPassword', $.proxy(this.openForgotPasswordScreen, this));
+            $(document).bind('authForm.changePassword', $.proxy(this.openChangePasswordScreen, this));
             
 
             this.showScreen(this.get('screen'));
@@ -225,18 +225,18 @@
             
             var canChangePw = !$.brx.utils.empty(this.get('activationKey'));
             
-            this.option('linksBox').css('display', 'logout' == screen?'none':'block');
-            this.option('links').login.css('display', 'login' == screen?'none':'inline');
-            this.option('links').join.css('display', 'join' == screen?'none':'inline');
-            this.option('links').forgotPassword.css('display', canChangePw || 'forgotPassword' == screen?'none':'inline');
-            this.option('links').changePassword.css('display', !canChangePw || 'changePassword' == screen?'none':'inline');
-            this.option('buttons').join.css('display', 'join' == screen?'inline':'none');
-            this.option('buttons').login.css('display', 'login' == screen?'inline':'none');
-            this.option('buttons').sendCode.css('display', 'forgotPassword' == screen?'inline':'none');
-            this.option('buttons').resetPassword.css('display', 'changePassword' == screen && !this.isLoggedIn()?'inline':'none');
-            this.option('buttons').changePassword.css('display', 'changePassword' == screen && this.isLoggedIn()?'inline':'none');
-            this.fields('passwordOld').css('display', 'changePassword' == screen && this.isLoggedIn()?'block':'none');
-            this.option('buttonLogout').css('display', 'logout' == screen?'inline':'none');
+            this.option('linksBox').css('display', 'logout' === screen?'none':'block');
+            this.option('links').login.css('display', 'login' === screen?'none':'inline');
+            this.option('links').join.css('display', 'join' === screen?'none':'inline');
+            this.option('links').forgotPassword.css('display', canChangePw || 'forgotPassword' === screen?'none':'inline');
+            this.option('links').changePassword.css('display', !canChangePw || 'changePassword' === screen?'none':'inline');
+            this.option('buttons').join.css('display', 'join' === screen?'inline':'none');
+            this.option('buttons').login.css('display', 'login' === screen?'inline':'none');
+            this.option('buttons').sendCode.css('display', 'forgotPassword' === screen?'inline':'none');
+            this.option('buttons').resetPassword.css('display', 'changePassword' === screen && !this.isLoggedIn()?'inline':'none');
+            this.option('buttons').changePassword.css('display', 'changePassword' === screen && this.isLoggedIn()?'inline':'none');
+            this.fields('passwordOld').css('display', 'changePassword' === screen && this.isLoggedIn()?'block':'none');
+            this.option('buttonLogout').css('display', 'logout' === screen?'inline':'none');
             this.option('screen',  screen);
             this.option('linksBox').css('display', this.isLoggedIn()?'none':'block');
             var height = 410;
@@ -267,7 +267,7 @@
 //                }
 //                
 //            }
-            if(this.get('titleLocation') == 'header'){
+            if(this.get('titleLocation') === 'header'){
                 this.getTemplate().data('dialog').option('title', screenBox.attr('screen-title'));
                 screenBox.find('h2').hide();
             }else{
@@ -424,7 +424,7 @@
                         field = 'password';
                         break;
                 }
-                if(field!='messageBox'){
+                if(field!=='messageBox'){
                     this.setFormFieldStateError(field, errorMessage );
                 }else{
                     this.setMessage(errorMessage, true);
@@ -448,7 +448,7 @@
                         field = 'name';
                         break;
                 }
-                if(field!='messageBox'){
+                if(field!=='messageBox'){
                     this.setFormFieldStateError(field, errorMessage );
                 }else{
                     this.setMessage(errorMessage,true);
@@ -457,11 +457,11 @@
         },
         
         processForgotPasswordErrors: function(errors){
-            for(key in errors){
+            for(var key in errors){
                 var errorMessage = errors[key];
                 var field = 'messageBox';
 
-                if(field!='messageBox'){
+                if(field!=='messageBox'){
                     this.setFormFieldStateError(field, errorMessage );
                 }else{
                     this.setMessage(errorMessage, true);
@@ -473,7 +473,7 @@
             for(key in errors){
                 var errorMessage = errors[key];
                 var field = 'messageBox';
-                if(field!='messageBox'){
+                if(field!=='messageBox'){
                     this.setFormFieldStateError(field, errorMessage );
                 }else{
                     this.setMessage(errorMessage, true);
@@ -500,10 +500,10 @@
                 
                 .done($.proxy(function(data){
                     console.dir({'data': data});
-                    if(0 == data.code){
+                    if(0 === data.code){
                         this.setMessage(this.nls('message_welcome'));//'Вход выполнен, добро пожаловать!');
 //                        window.location = window.location;
-                        $.brx.utils.loadPage()
+                        $.brx.utils.loadPage();
                     }else{
                         this.processLoginErrors($.brx.utils.handleErrors(data));
                     }
@@ -541,7 +541,7 @@
                 
                 .done($.proxy(function(data){
                     console.dir({'data': data});
-                    if(0 == data.code){
+                    if(0 === data.code){
                         this.showLoginScreen();
                         this.setMessage(this.nls('message_signed_up'));//'Регистрация прошла успешно, вам отправлено письмо, содержащие пароль, для входа на сайт.')
                         console.info('User registered');
@@ -580,7 +580,7 @@
                 
                 .done($.proxy(function(data){
                     console.dir({'data': data});
-                    if(0 == data.code){
+                    if(0 === data.code){
                         console.info('Code sent');
                         this.setMessage(this.nls('message_change_pass_code_sent'));//'Вам отправлено письмо со ссылкой для смены пароля. Чтобы сменить пароль, перейдите по ссылке в письме.');
                     }else{
@@ -623,14 +623,14 @@
                 
                 .done($.proxy(function(data){
                     console.dir({'data': data});
-                    if(0 == data.code){
+                    if(0 === data.code){
                         console.info('Password changed');
                         this.option('activationKey',  null);
                         this.option('activationLogin',  null);
 //                        this.showLoginScreen();
 //                        this.setMessage('Пароль изменен, теперь вы можете войти с новым паролем.');
                         this.setMessage(this.nls('message_password_set_signing_in'));//'Пароль изменен, выполняется вход');
-                        $.brx.utils.loadPage()
+                        $.brx.utils.loadPage();
                         
                     }else{
                         this.processChangePasswordErrors($.brx.utils.handleErrors(data));
@@ -675,7 +675,7 @@
                 
                 .done($.proxy(function(data){
                     console.dir({'data': data});
-                    if(0 == data.code){
+                    if(0 === data.code){
                         console.info('Password changed');
 //                        this.setMessage('Пароль изменен, теперь вы можете войти с новым паролем.');
                         this.getSpinner().hide();
@@ -716,7 +716,7 @@
                 
                 .done($.proxy(function(data){
                     console.dir({'data': data});
-                    if(0 == data.code){
+                    if(0 === data.code){
                         this.setMessage(this.nls('message_signed_out'));//'Выход выполнен, до новых встреч!');
 //                        window.location = ''+window.location;
                         $.brx.utils.loadPage();
@@ -741,9 +741,9 @@
         checkEmailExists: function(event){
             var email = this.inputs('email2').val();
             if(email){
-                if(this.get('validEmails')[email] == 1){
+                if(this.get('validEmails')[email] === 1){
                     return true;
-                }else if(this.get('validEmails')[email] == 0){
+                }else if(this.get('validEmails')[email] === 0){
                     this.setFormFieldStateError('email2', this.nls('message_error_email_exists'));//'Этот e-mail уже зарегистрирован.')
                     return false;
                 }else{
@@ -761,14 +761,14 @@
                     .done($.proxy(function(data){
                         console.dir({'data': data});
                         var email = this.inputs('email2').val();
-                        if(data.payload.email == email){
-                            if(0 == data.code){
+                        if(data.payload.email === email){
+                            if(0 === data.code){
                                 console.info('Email ' + email + ' available');
                             }else{
                                 this.processJoinErrors($.brx.utils.handleErrors(data));
                             }
                         }
-                        this.options.validEmails[data.payload.email] = data.code == 0?1:0;
+                        this.options.validEmails[data.payload.email] = data.code === 0?1:0;
                     },this))
 
                     .fail($.proxy(function(){
@@ -778,7 +778,7 @@
                        this.getSpinner().hide($.proxy(this.showMessage, this));
                     },this));
                     
-                    return false
+                    return false;
                 }
             }
         },
@@ -786,9 +786,9 @@
         checkNameExists: function(){
             var login = this.inputs('name').val();
             if(login && this.checkRegexp('name')){
-                if(this.get('validNames')[login] == 1){
+                if(this.get('validNames')[login] === 1){
                     return true;
-                }else if(this.get('validNames')[login] == 0){
+                }else if(this.get('validNames')[login] === 0){
                     this.setFormFieldStateError('name', this.nls('message_error_username_exists'));//'Это имя пользователя уже зарегистрировано.')
                     return false;
                 }else{
@@ -806,14 +806,14 @@
                     .done($.proxy(function(data){
                         console.dir({'data': data});
                         var login = this.inputs('name').val();
-                        if(data.payload.login == login){
-                            if(0 == data.code){
+                        if(data.payload.login === login){
+                            if(0 === data.code){
                                 console.info('Name '+login+' available');
                             }else{
                                 this.processJoinErrors($.brx.utils.handleErrors(data));
                             }
                         }
-                        this.options.validNames[data.payload.login] = data.code == 0?1:0;
+                        this.options.validNames[data.payload.login] = data.code === 0?1:0;
                     },this))
 
                     .fail($.proxy(function(){
@@ -881,4 +881,4 @@
         // In jQuery UI 1.9 and above, you would define _destroy instead of destroy and not call the base method
         }
     });
-}( jQuery ) );
+}( jQuery, _ ) );
