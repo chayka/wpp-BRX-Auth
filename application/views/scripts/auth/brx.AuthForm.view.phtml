@@ -9,24 +9,24 @@ $this->declareVars(array(
 NlsHelper::load('views/auth/authForm');
 
 ?>
-<div class="bem-modal_auth_form" backbone-view="brx.AuthForm" titleLocation="<?php echo $this->titleLocation;?>" popup="<?php echo $this->popup;?>" screen="<?php echo $this->screen;?>" key="<?php echo $this->key;?>" login="<?php echo $this->login;?>" <?php HtmlHelper::hidden();?>>
-    <div class="form_screen screen_login" attachPoint="screens.login" screen-title="<?php NlsHelper::__('header_login_screen');?>">
+<div class="bem-modal_auth_form" data-view="brx.AuthForm" data-titleLocation="<?php echo $this->titleLocation;?>" data-popup="<?php echo $this->popup;?>" data-screen="<?php echo $this->screen;?>" data-key="<?php echo $this->key;?>" data-login="<?php echo $this->login;?>" <?php HtmlHelper::hidden();?>>
+    <div class="form_screen screen_login" data-attach-point="screens.login" screen-title="<?php NlsHelper::__('header_login_screen');?>">
         <h2><?php NlsHelper::__('header_login_screen');?></h2>
         <!--div class="social_login_box">
             <button>facebook</button>
             <button>vkontakte</button>
             <button>linkedin</button>
         </div-->
-        <form attachPoint="formLogin" attachEvent="submit: buttonLoginClicked">
+        <form data-attach-point="formLogin" data-attach-event="submit: buttonLoginClicked">
             <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
-            <div class="form_field email_login" attachPoint="fields.email1" check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>">
+            <div class="form_field email_login" data-attach-point="fields.email1" check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>">
                 <label for="email"><?php NlsHelper::__('label_email')?>:</label>
                 <div class="form_field-input_box">
                     <input type="text" name="email" value="" class="" />
                 </div>
                 <div class="form_field-tips"></div>
             </div>
-            <div class="form_field password" attachPoint="fields.password">
+            <div class="form_field password" data-attach-point="fields.password">
                 <label for="password"><?php NlsHelper::__('label_password')?>:</label>
                 <div class="form_field-input_box">
                     <input type="password" name="password" id="password" value="" class="" />
@@ -36,18 +36,18 @@ NlsHelper::load('views/auth/authForm');
         </form>
             
     </div>
-    <div class="form_screen screen_join" attachPoint="screens.join" screen-title="<?php NlsHelper::__('header_join_screen')?>">
+    <div class="form_screen screen_join" data-attach-point="screens.join" screen-title="<?php NlsHelper::__('header_join_screen')?>">
         <h2><?php NlsHelper::__('header_join_screen')?></h2>
-        <form attachPoint="formJoin" attachEvent="submit: buttonJoinClicked">
+        <form data-attach-point="formJoin" data-attach-event="submit: buttonJoinClicked">
             <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
-            <div class="form_field email_join" attachPoint="fields.email2" check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>">
+            <div class="form_field email_join" data-attach-point="fields.email2" check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>">
                 <label for="email"><?php NlsHelper::__('label_email')?>:</label>
                 <div class="form_field-input_box">
                     <input type="text" name="email" value="" class="" />
                 </div>
                 <div class="form_field-tips"></div>
             </div>
-            <div class="form_field name" attachPoint="fields.name" check-regexp-pattern="^[A-Za-z\d\-]+$" check-regexp-message="<?php NlsHelper::__('message_validate_username');?>">
+            <div class="form_field name" data-attach-point="fields.name" check-regexp-pattern="^[A-Za-z\d\-]+$" check-regexp-message="<?php NlsHelper::__('message_validate_username');?>">
                 <label for="name"><?php NlsHelper::__('label_username')?>:</label>
                 <div class="form_field-input_box">
                     <input type="text" name="name" class="" />
@@ -57,20 +57,20 @@ NlsHelper::load('views/auth/authForm');
             <!--div class="form_field password">
                 <label for="password">Password</label>
                 <div class="form_field-input_box">
-                    <input type="password" name="password" attachPoint="password" id="password" value="" class="" />
+                    <input type="password" name="password" data-attach-point="password" id="password" value="" class="" />
                     <div class="form_field-tips"></div>
                 </div>
             </div-->
         </form>
     </div>
-    <div class="form_screen screen_forgot_password" attachPoint="screens.forgotPassword" screen-title="<?php NlsHelper::__('header_forgot_password_screen');?>">
+    <div class="form_screen screen_forgot_password" data-attach-point="screens.forgotPassword" screen-title="<?php NlsHelper::__('header_forgot_password_screen');?>">
         <h2><?php NlsHelper::__('header_forgot_password_screen')?></h2>
-            <form attachPoint="formForgotPassword" attachEvent="submit: buttonSendCodeClicked">
+            <form data-attach-point="formForgotPassword" data-attach-event="submit: buttonSendCodeClicked">
                 <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
                 <div class="form_box-comments">
                     <?php NlsHelper::__('message_forgot_password')?>
                 </div>
-                <div class="form_field email_login" attachPoint="fields.email3" check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>">
+                <div class="form_field email_login" data-attach-point="fields.email3" check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>">
                     <label for="email"><?php NlsHelper::__('label_email')?>:</label>
                     <div class="form_field-input_box">
                         <input type="text" name="email" value="" class="" />
@@ -79,25 +79,25 @@ NlsHelper::load('views/auth/authForm');
                 </div>
             </form>
     </div>
-    <div class="form_screen screen_change_password" attachPoint="screens.changePassword" screen-title="<?php NlsHelper::__('header_change_password_screen');?>">
+    <div class="form_screen screen_change_password" data-attach-point="screens.changePassword" screen-title="<?php NlsHelper::__('header_change_password_screen');?>">
         <h2><?php NlsHelper::__('header_change_password_screen');?></h2>
-            <form attachPoint="formChangePassword" attachEvent="submit: buttonChangePasswordClicked">
+            <form data-attach-point="formChangePassword" data-attach-event="submit: buttonChangePasswordClicked">
                 <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
-                <div class="form_field passwordOld" attachPoint="fields.passwordOld">
+                <div class="form_field passwordOld" data-attach-point="fields.passwordOld">
                     <label for="passOld"><?php NlsHelper::__('label_old_pass');?>:</label>
                     <div class="form_field-input_box">
                         <input type="password" name="passOld" value="" class="" />
                     </div>
                     <div class="form_field-tips"></div>
                 </div>
-                <div class="form_field password1" attachPoint="fields.password1">
+                <div class="form_field password1" data-attach-point="fields.password1">
                     <label for="passl"><?php NlsHelper::__('label_new_pass');?>:</label>
                     <div class="form_field-input_box">
                         <input type="password" name="pass1" value="" class="" />
                     </div>
                     <div class="form_field-tips"></div>
                 </div>
-                <div class="form_field password2" attachPoint="fields.password2">
+                <div class="form_field password2" data-attach-point="fields.password2">
                     <label for="pass2"><?php NlsHelper::__('label_once_again');?>:</label>
                     <div class="form_field-input_box">
                         <input type="password" name="pass2" value="" class="" />
@@ -106,7 +106,7 @@ NlsHelper::load('views/auth/authForm');
                 </div>
             </form>
     </div>
-    <div class="form_screen screen_logout" attachPoint="screens.logout" screen-title="<?php NlsHelper::__('header_logout_screen');?>">
+    <div class="form_screen screen_logout" data-attach-point="screens.logout" screen-title="<?php NlsHelper::__('header_logout_screen');?>">
         <h2><?php NlsHelper::__('header_logout_screen');?></h2>
         <form>
             <div class="form_box-comments">
@@ -115,23 +115,23 @@ NlsHelper::load('views/auth/authForm');
         </form>    
     </div>    
     <div class="form_box-spinner">
-        <span class="form_spinner" widget="spinner" attachWidget="spinner"></span>
-        <div attachPoint="messageBox" class="form_box-tips ui-corner-all" style="display:none;"></div>
+        <span class="form_spinner brx_single_spinner" data-view="brx.SingleSpinner" data-attach-view="spinner"></span>
+        <div data-attach-point="messageBox" class="form_box-tips ui-corner-all" style="display:none;"></div>
     </div>
     <div class="form_box-buttons">
-        <button attachPoint="buttons.login" attachEvent="buttonLoginClicked" zwidget="button" class="button_login"><?php NlsHelper::__('button_login');?></button>
-        <button attachPoint="buttons.join" attachEvent="buttonJoinClicked" zwidget="button" class="button_join"><?php NlsHelper::__('button_join');?></button>
-        <button attachPoint="buttons.sendCode" attachEvent="buttonSendCodeClicked" zwidget="button" class="button_send_code"><?php NlsHelper::__('button_send_code');?></button>
-        <button attachPoint="buttons.resetPassword" attachEvent="buttonResetPasswordClicked" zwidget="button" class="button_reset_password"><?php NlsHelper::__('button_reset_password');?></button>
-        <button attachPoint="buttons.changePassword" attachEvent="buttonChangePasswordClicked" zwidget="button" class="button_change_password"><?php NlsHelper::__('button_change_password');?></button>
-        <button attachPoint="buttonLogout" attachEvent="buttonLogoutClicked" zwidget="button" class="button_logout"><?php NlsHelper::__('button_logout');?></button>
-        <button attachPoint="buttonClose" attachEvent="click: buttonCloseClicked" zwidget="button" class="button_cancel"><?php NlsHelper::__('button_cancel')?></button>
+        <button data-attach-point="buttons.login" data-attach-event="buttonLoginClicked" class="button_login"><?php NlsHelper::__('button_login');?></button>
+        <button data-attach-point="buttons.join" data-attach-event="buttonJoinClicked" class="button_join"><?php NlsHelper::__('button_join');?></button>
+        <button data-attach-point="buttons.sendCode" data-attach-event="buttonSendCodeClicked" class="button_send_code"><?php NlsHelper::__('button_send_code');?></button>
+        <button data-attach-point="buttons.resetPassword" data-attach-event="buttonResetPasswordClicked" class="button_reset_password"><?php NlsHelper::__('button_reset_password');?></button>
+        <button data-attach-point="buttons.changePassword" data-attach-event="buttonChangePasswordClicked" class="button_change_password"><?php NlsHelper::__('button_change_password');?></button>
+        <button data-attach-point="buttonLogout" data-attach-event="buttonLogoutClicked" class="button_logout"><?php NlsHelper::__('button_logout');?></button>
+        <button data-attach-point="buttonClose" data-attach-event="click: buttonCloseClicked" class="button_cancel"><?php NlsHelper::__('button_cancel')?></button>
     </div>
-    <div class="form_box-links" attachPoint="linksBox">
-        <span attachPoint="links.login" attachEvent="click: showLoginScreen" class="link" ><?php NlsHelper::__('link_login');?></span>
-        <span attachPoint="links.join" attachEvent="click: showJoinScreen" class="link" ><?php NlsHelper::__('link_join');?></span>
-        <span attachPoint="links.forgotPassword" attachEvent="click: showForgotPasswordScreen" class="link"><?php NlsHelper::__('link_forgot_password');?></span>
-        <span attachPoint="links.changePassword" attachEvent="click: showChangePasswordScreen" class="link" ><?php NlsHelper::__('link_change_password');?></span>
+    <div class="form_box-links" data-attach-point="linksBox">
+        <span data-attach-point="links.login" data-attach-event="click: showLoginScreen" class="link" ><?php NlsHelper::__('link_login');?></span>
+        <span data-attach-point="links.join" data-attach-event="click: showJoinScreen" class="link" ><?php NlsHelper::__('link_join');?></span>
+        <span data-attach-point="links.forgotPassword" data-attach-event="click: showForgotPasswordScreen" class="link"><?php NlsHelper::__('link_forgot_password');?></span>
+        <span data-attach-point="links.changePassword" data-attach-event="click: showChangePasswordScreen" class="link" ><?php NlsHelper::__('link_change_password');?></span>
     </div>
     <div class="clearfloat"></div>
 </div>

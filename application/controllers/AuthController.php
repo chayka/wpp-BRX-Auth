@@ -25,7 +25,7 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
         }        
         $payload = array('email' => $email);
         if ($errors->get_error_code()){
-            $this->outputErrors($errors, $payload);
+            $this->outputErrors($errors, $payload, 200);
         }else{
             JsonHelper::respond($payload);;
         }
@@ -40,7 +40,7 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
         }
         $payload = array('login' => $login);
         if ($errors->get_error_code()){
-            $this->outputErrors($errors, $payload);
+            $this->outputErrors($errors, $payload, 200);
         }else{
             JsonHelper::respond($payload);
         }
@@ -315,7 +315,7 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
         $this->outputErrors($errors);
     }
     
-    public function outputErrors(WP_Error $errors, $payload = array()){
+    public function outputErrors(WP_Error $errors, $payload = array(), $httpResponseCode = 400){
         foreach($errors->errors as $code => $error){
             $newMessage = preg_replace('%<strong>[^<]*</strong>:\s*%m', '', $errors->get_error_message($code));
             switch($code){
@@ -342,7 +342,7 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
             }
         }
         
-        JsonHelper::respondErrors($errors, $payload);
+        JsonHelper::respondErrors($errors, $payload, $httpResponseCode);
     }
 
 }

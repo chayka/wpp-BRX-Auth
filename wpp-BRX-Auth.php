@@ -89,11 +89,11 @@ class wpp_BRX_Auth extends WpPlugin {
         NlsHelper::registerScriptNls('jquery-brx-authForm-nls', 'jquery.brx.authForm.js');
         NlsHelper::registerScriptNls('backbone-brx-authForm-nls', 'brx.AuthForm.view.js');
         if($this->needStyles){
-            $this->registerStyle('jquery-brx-authForm', 'bem-authForm.less');
+            $this->registerStyle('jquery-brx-authForm', 'bem-authForm.less', array('backbone-brx-spinners'));
             wp_enqueue_style('jquery-brx-authForm');
         }
         $this->registerScript('jquery-brx-authForm', 'jquery.brx.authForm.js', array('jquery-brx-form', 'jquery-brx-authForm-nls'));
-        $this->registerScript('backbone-brx-authForm', 'brx.AuthForm.view.js', array('backbone-brx', 'jquery-brx-placeholder', 'backbone-brx-authForm-nls'));
+        $this->registerScript('backbone-brx-authForm', 'brx.AuthForm.view.js', array('backbone-brx', 'jquery-brx-utils', 'backbone-brx-spinners', 'jquery-brx-placeholder', 'backbone-brx-authForm-nls'));
     }
     
     public function registerActions(){

@@ -2,7 +2,6 @@
 //    $.widgetTemplated( "brx.authForm", $.brx.form, {
     _.declare( "brx.AuthForm", $.brx.FormView, {
  
-//        _parentPrototype: $.ui.templated.prototype,
         
         // These options will be used as defaults
         nlsNamespace: 'brx.AuthForm',
@@ -29,7 +28,7 @@
             this.set('screen', this.$el.attr('screen'));
             this.set('activationKey',  this.$el.attr('key'));
             this.set('activationLogin',  this.$el.attr('login'));
-            this.set('popup',  !$.brx.utils.empty(this.$el.attr('popup')) || this.popup);
+            this.set('popup',  !_.empty(this.$el.attr('popup')) || this.popup);
             if(this.getSpinner()){
                 this.getSpinner().getTemplate()
                     .css('display', 'inline-block');
@@ -163,7 +162,7 @@
 
             this.showScreen(this.get('screen'));
             
-            $.brx.utils.addErrorHandler('authform', $.proxy(this.handleApiError, this));
+            $.brx.Ajax.addErrorHandler('authform', $.proxy(this.handleApiError, this));
             
             
         },
@@ -223,7 +222,7 @@
             var firstInput = screenBox.find('input[type=text]')[0];
             console.dir({'firstInput':firstInput});
             
-            var canChangePw = !$.brx.utils.empty(this.get('activationKey'));
+            var canChangePw = !_.empty(this.get('activationKey'));
             
             this.option('linksBox').css('display', 'logout' === screen?'none':'block');
             this.option('links').login.css('display', 'login' === screen?'none':'inline');
@@ -409,12 +408,13 @@
             
         },
         
-        processLoginErrors: function(errors){
+        processErrors: function(errors){
             for(key in errors){
                 var errorMessage = errors[key];
                 var field = 'messageBox';
                 switch(key){
-                    case 'empty_username':
+                    // login
+//                    case '*empty_username':
                     case 'invalid_username':
                         field = 'email1';
                         break;
@@ -423,102 +423,159 @@
                     case 'authentication_failed':
                         field = 'password';
                         break;
-                }
-                if(field!=='messageBox'){
-                    this.setFormFieldStateError(field, errorMessage );
-                }else{
-                    this.setMessage(errorMessage, true);
-                }
-            }
-        },
-        
-        processJoinErrors: function(errors){
-            for(key in errors){
-                var errorMessage = errors[key];
-                var field = 'messageBox';
-                switch(key){
+                    // join
                     case 'empty_email':
                     case 'email_exists':
                         field = 'email2';
                         break;
                     case 'empty_username':
                     case 'name_exists':
-                    case 'authentication_failed':
-                    default:
+                    case 'username_exists':
+//                    case '*authentication_failed':
                         field = 'name';
                         break;
                 }
                 if(field!=='messageBox'){
                     this.setFormFieldStateError(field, errorMessage );
                 }else{
-                    this.setMessage(errorMessage,true);
-                }
-            }
-        },
-        
-        processForgotPasswordErrors: function(errors){
-            for(var key in errors){
-                var errorMessage = errors[key];
-                var field = 'messageBox';
-
-                if(field!=='messageBox'){
-                    this.setFormFieldStateError(field, errorMessage );
-                }else{
                     this.setMessage(errorMessage, true);
                 }
             }
+            
         },
         
-        processChangePasswordErrors: function(errors){
-            for(key in errors){
-                var errorMessage = errors[key];
-                var field = 'messageBox';
-                if(field!=='messageBox'){
-                    this.setFormFieldStateError(field, errorMessage );
-                }else{
-                    this.setMessage(errorMessage, true);
-                }
-            }
-        },
+//        processLoginErrors: function(errors){
+//            for(key in errors){
+//                var errorMessage = errors[key];
+//                var field = 'messageBox';
+//                switch(key){
+//                    case 'empty_username':
+//                    case 'invalid_username':
+//                        field = 'email1';
+//                        break;
+//                    case 'empty_password':
+//                    case 'incorrect_password':
+//                    case 'authentication_failed':
+//                        field = 'password';
+//                        break;
+//                }
+//                if(field!=='messageBox'){
+//                    this.setFormFieldStateError(field, errorMessage );
+//                }else{
+//                    this.setMessage(errorMessage, true);
+//                }
+//            }
+//        },
+//        
+//        processJoinErrors: function(errors){
+//            for(key in errors){
+//                var errorMessage = errors[key];
+//                var field = 'messageBox';
+//                switch(key){
+//                    case 'empty_email':
+//                    case 'email_exists':
+//                        field = 'email2';
+//                        break;
+//                    case 'empty_username':
+//                    case 'name_exists':
+//                    case 'authentication_failed':
+//                    default:
+//                        field = 'name';
+//                        break;
+//                }
+//                if(field!=='messageBox'){
+//                    this.setFormFieldStateError(field, errorMessage );
+//                }else{
+//                    this.setMessage(errorMessage,true);
+//                }
+//            }
+//        },
+//        
+//        processForgotPasswordErrors: function(errors){
+//            for(var key in errors){
+//                var errorMessage = errors[key];
+//                var field = 'messageBox';
+//
+//                if(field!=='messageBox'){
+//                    this.setFormFieldStateError(field, errorMessage );
+//                }else{
+//                    this.setMessage(errorMessage, true);
+//                }
+//            }
+//        },
+//        
+//        processChangePasswordErrors: function(errors){
+//            for(key in errors){
+//                var errorMessage = errors[key];
+//                var field = 'messageBox';
+//                if(field!=='messageBox'){
+//                    this.setFormFieldStateError(field, errorMessage );
+//                }else{
+//                    this.setMessage(errorMessage, true);
+//                }
+//            }
+//        },
         
         buttonLoginClicked: function(event){
             event.preventDefault();
             if(this.checkLoginForm()){
                 this.setFormFieldStateClear('email1');
                 this.setFormFieldStateClear('password');
-                this.clearMessage();
-                this.getSpinner().show(this.nls('message_spinner_sign_in'));
                 this.disableInputs();
-                $.ajax('/api/auth/login', {
-                    data:{
+                this.getSpinner().show(this.nls('message_spinner_sign_in'));
+                
+                this.ajax('/api/auth/login',{
+                    data: {
                         log: this.inputs('email1').val(),
                         pwd: this.inputs('password').val()
                     },
-                    dataType: 'json',
-                    type: 'post'
-                })
-                
-                .done($.proxy(function(data){
-                    console.dir({'data': data});
-                    if(0 === data.code){
+                    spinner: false,
+                    showMessage: false,
+                    errorMessage: this.nls('message_error_auth_failed'),
+                    success: $.proxy(function(data){
+                        console.dir({'data': data});
                         this.setMessage(this.nls('message_welcome'));//'Вход выполнен, добро пожаловать!');
-//                        window.location = window.location;
                         $.brx.utils.loadPage();
-                    }else{
-                        this.processLoginErrors($.brx.utils.handleErrors(data));
-                    }
-                },this))
+                    }, this),
+                    complete: $.proxy(function(){
+                        this.enableInputs();
+                        this.getSpinner().hide($.proxy(this.showMessage, this));
+                    }, this)
+                });
                 
-                .fail($.proxy(function(response){
-                    var message = $.brx.utils.processFail(response) 
-                        || this.nls('message_error_auth_failed');//'Ошибка: вход не выполнен';
-                    this.setMessage(message, true);
-                },this))
-
-                .always($.proxy(function(){
-                   this.getSpinner().hide($.proxy(this.showMessage, this));
-                    this.enableInputs();
-                },this));
+//                this.clearMessage();
+//                this.getSpinner().show(this.nls('message_spinner_sign_in'));
+//                this.disableInputs();
+//                $.ajax('/api/auth/login', {
+//                    data:{
+//                        log: this.inputs('email1').val(),
+//                        pwd: this.inputs('password').val()
+//                    },
+//                    dataType: 'json',
+//                    type: 'post'
+//                })
+//                
+//                .done($.proxy(function(data){
+//                    console.dir({'data': data});
+//                    if(0 === data.code){
+//                        this.setMessage(this.nls('message_welcome'));//'Вход выполнен, добро пожаловать!');
+////                        window.location = window.location;
+//                        $.brx.utils.loadPage();
+//                    }else{
+//                        this.processLoginErrors($.brx.utils.handleErrors(data));
+//                    }
+//                },this))
+//                
+//                .fail($.proxy(function(response){
+//                    var message = $.brx.utils.processFail(response) 
+//                        || this.nls('message_error_auth_failed');//'Ошибка: вход не выполнен';
+//                    this.setMessage(message, true);
+//                },this))
+//
+//                .always($.proxy(function(){
+//                   this.getSpinner().hide($.proxy(this.showMessage, this));
+//                    this.enableInputs();
+//                },this));
             }
         },
         
@@ -527,39 +584,60 @@
             if(this.checkJoinForm()){
                 this.setFormFieldStateClear('email2');
                 this.setFormFieldStateClear('name');
-                this.clearMessage();
-                this.getSpinner().show(this.nls('message_spinner_sign_up'));//'Выполняется регистрация...');
                 this.disableInputs();
-                $.ajax('/api/auth/join', {
+                this.getSpinner().show(this.nls('message_spinner_sign_up'));//'Выполняется регистрация...');
+                
+                this.ajax('/api/auth/join', {
                     data:{
                         email: this.inputs('email2').val(),
                         login: this.inputs('name').val()
                     },
-                    dataType: 'json',
-                    type: 'post'
-                })
-                
-                .done($.proxy(function(data){
-                    console.dir({'data': data});
-                    if(0 === data.code){
+                    spinner: false,
+                    showMessage: false,
+                    errorMessage: this.nls('message_error_sign_up_failed'),
+                    success: $.proxy(function(data){
+                        console.dir({'data': data});
                         this.showLoginScreen();
                         this.setMessage(this.nls('message_signed_up'));//'Регистрация прошла успешно, вам отправлено письмо, содержащие пароль, для входа на сайт.')
-                        console.info('User registered');
-                    }else{
-                        this.processJoinErrors($.brx.utils.handleErrors(data));
-                    }
-                },this))
+                    },this),
+                    complete: $.proxy(function(data){
+                        this.enableInputs();
+                        this.getSpinner().hide($.proxy(this.showMessage, this));
+                    },this)
+                });
                 
-                .fail($.proxy(function(response){
-                    var message = $.brx.utils.processFail(response) 
-                        || this.nls('message_error_sign_up_failed');//'Ошибка: регистрация не выполнена';
-                    this.setMessage(message, true);
-                },this))
-
-                .always($.proxy(function(){
-                    this.getSpinner().hide($.proxy(this.showMessage, this));
-                    this.enableInputs();
-                },this));
+//                this.clearMessage();
+//                this.getSpinner().show(this.nls('message_spinner_sign_up'));//'Выполняется регистрация...');
+//                $.ajax('/api/auth/join', {
+//                    data:{
+//                        email: this.inputs('email2').val(),
+//                        login: this.inputs('name').val()
+//                    },
+//                    dataType: 'json',
+//                    type: 'post'
+//                })
+//                
+//                .done($.proxy(function(data){
+//                    console.dir({'data': data});
+//                    if(0 === data.code){
+//                        this.showLoginScreen();
+//                        this.setMessage(this.nls('message_signed_up'));//'Регистрация прошла успешно, вам отправлено письмо, содержащие пароль, для входа на сайт.')
+//                        console.info('User registered');
+//                    }else{
+//                        this.processJoinErrors($.brx.utils.handleErrors(data));
+//                    }
+//                },this))
+//                
+//                .fail($.proxy(function(response){
+//                    var message = $.brx.utils.processFail(response) 
+//                        || this.nls('message_error_sign_up_failed');//'Ошибка: регистрация не выполнена';
+//                    this.setMessage(message, true);
+//                },this))
+//
+//                .always($.proxy(function(){
+//                    this.getSpinner().hide($.proxy(this.showMessage, this));
+//                    this.enableInputs();
+//                },this));
             }
         },
         
@@ -567,38 +645,57 @@
             event.preventDefault();
             if(this.checkForgotPasswordForm()){
                 this.setFormFieldStateClear('email3');
-                this.getSpinner().show(this.nls('message_spinner_validating_email'));//'Проверка адреса e-mail...');
                 this.disableInputs();
-                this.clearMessage();
-                $.ajax('/api/auth/forgot-password', {
+                this.getSpinner().show(this.nls('message_spinner_validating_email'));//'Проверка адреса e-mail...');
+                
+                this.ajax('/api/auth/forgot-password', {
                     data:{
                         email: this.inputs('email3').val()
                     },
-                    dataType: 'json',
-                    type: 'post'
-                })
-                
-                .done($.proxy(function(data){
-                    console.dir({'data': data});
-                    if(0 === data.code){
-                        console.info('Code sent');
+                    spinner: false,
+                    showMessage: false,
+                    errorMessage: this.nls('message_error_password_recovery'),
+                    success: $.proxy(function(data){
+                        console.dir({'data': data});
                         this.setMessage(this.nls('message_change_pass_code_sent'));//'Вам отправлено письмо со ссылкой для смены пароля. Чтобы сменить пароль, перейдите по ссылке в письме.');
-                    }else{
-                        this.processForgotPasswordErrors($.brx.utils.handleErrors(data));
-                    }
-                },this))
+                    },this),
+                    complete: $.proxy(function(data){
+                        this.enableInputs();
+                        this.getSpinner().hide($.proxy(this.showMessage, this));
+                    },this)
+                });
                 
-                .fail($.proxy(function(response){
-                    var message = $.brx.utils.processFail(response) 
-                        || this.nls('message_error_password_recovery');//'Ошибка восстановления пароля';
-                    this.setMessage(message, true);
-                },this))
-
-                .always($.proxy(function(){
-                    this.getSpinner().hide($.proxy(this.showMessage, this));
-                    this.enableInputs();
-                   
-                },this));
+//                this.getSpinner().show(this.nls('message_spinner_validating_email'));//'Проверка адреса e-mail...');
+//                this.clearMessage();
+//                $.ajax('/api/auth/forgot-password', {
+//                    data:{
+//                        email: this.inputs('email3').val()
+//                    },
+//                    dataType: 'json',
+//                    type: 'post'
+//                })
+//                
+//                .done($.proxy(function(data){
+//                    console.dir({'data': data});
+//                    if(0 === data.code){
+//                        console.info('Code sent');
+//                        this.setMessage(this.nls('message_change_pass_code_sent'));//'Вам отправлено письмо со ссылкой для смены пароля. Чтобы сменить пароль, перейдите по ссылке в письме.');
+//                    }else{
+//                        this.processForgotPasswordErrors($.brx.utils.handleErrors(data));
+//                    }
+//                },this))
+//                
+//                .fail($.proxy(function(response){
+//                    var message = $.brx.utils.processFail(response) 
+//                        || this.nls('message_error_password_recovery');//'Ошибка восстановления пароля';
+//                    this.setMessage(message, true);
+//                },this))
+//
+//                .always($.proxy(function(){
+//                    this.getSpinner().hide($.proxy(this.showMessage, this));
+//                    this.enableInputs();
+//                   
+//                },this));
             }
         },
         
@@ -607,51 +704,76 @@
             if(this.checkChangePasswordForm()){
                 this.setFormFieldStateClear('password1');
                 this.setFormFieldStateClear('password2');
-                this.clearMessage();
-                this.getSpinner().show(this.nls('message_spinner_reset_password'));//'Смена пароля...');
                 this.disableInputs();
-                $.ajax('/api/auth/reset-password', {
+                this.getSpinner().show(this.nls('message_spinner_reset_password'));//'Смена пароля...');
+                
+                this.ajax('/api/auth/reset-password', {
                     data:{
                         key: this.get('activationKey'),
                         login: this.get('activationLogin'),
                         pass1: this.inputs('password1').val(),
                         pass2: this.inputs('password2').val()
                     },
-                    dataType: 'json',
-                    type: 'post'
-                })
-                
-                .done($.proxy(function(data){
-                    console.dir({'data': data});
-                    if(0 === data.code){
-                        console.info('Password changed');
+                    spinner: false,
+                    showMessage: false,
+                    errorMessage: this.nls('message_error_wrong_code'),
+                    success: $.proxy(function(data){
+                        console.dir({'data': data});
                         this.option('activationKey',  null);
                         this.option('activationLogin',  null);
-//                        this.showLoginScreen();
-//                        this.setMessage('Пароль изменен, теперь вы можете войти с новым паролем.');
                         this.setMessage(this.nls('message_password_set_signing_in'));//'Пароль изменен, выполняется вход');
                         $.brx.utils.loadPage();
-                        
-                    }else{
-                        this.processChangePasswordErrors($.brx.utils.handleErrors(data));
-                    }
-                },this))
+                    },this),
+                    complete: $.proxy(function(data){
+                        this.enableInputs();
+                        this.getSpinner().hide($.proxy(this.showMessage, this));
+                    },this)                    
+                });
                 
-                .fail($.proxy(function(response){
-                    var message = $.brx.utils.processFail(response) 
-                        || this.nls('message_error_wrong_code');//'Неверный код активации, пройдите процедуру восстановления пароля еще раз';
-                    this.setMessage(message, true);
-                    this.option('activationKey',  null);
-                    this.option('activationLogin',  null);
-                    this.showForgotPasswordScreen();
-//                    this.setMessage('Неверный код активации, пройдите процедуру восстановления пароля еще раз.',true);
-                },this))
-
-                .always($.proxy(function(){
-                    this.getSpinner().hide($.proxy(this.showMessage, this));
-                    this.enableInputs();
-                   
-                },this));
+//                this.clearMessage();
+//                this.getSpinner().show(this.nls('message_spinner_reset_password'));//'Смена пароля...');
+//                $.ajax('/api/auth/reset-password', {
+//                    data:{
+//                        key: this.get('activationKey'),
+//                        login: this.get('activationLogin'),
+//                        pass1: this.inputs('password1').val(),
+//                        pass2: this.inputs('password2').val()
+//                    },
+//                    dataType: 'json',
+//                    type: 'post'
+//                })
+//                
+//                .done($.proxy(function(data){
+//                    console.dir({'data': data});
+//                    if(0 === data.code){
+//                        console.info('Password changed');
+//                        this.option('activationKey',  null);
+//                        this.option('activationLogin',  null);
+////                        this.showLoginScreen();
+////                        this.setMessage('Пароль изменен, теперь вы можете войти с новым паролем.');
+//                        this.setMessage(this.nls('message_password_set_signing_in'));//'Пароль изменен, выполняется вход');
+//                        $.brx.utils.loadPage();
+//                        
+//                    }else{
+//                        this.processChangePasswordErrors($.brx.utils.handleErrors(data));
+//                    }
+//                },this))
+//                
+//                .fail($.proxy(function(response){
+//                    var message = $.brx.utils.processFail(response) 
+//                        || this.nls('message_error_wrong_code');//'Неверный код активации, пройдите процедуру восстановления пароля еще раз';
+//                    this.setMessage(message, true);
+//                    this.option('activationKey',  null);
+//                    this.option('activationLogin',  null);
+//                    this.showForgotPasswordScreen();
+////                    this.setMessage('Неверный код активации, пройдите процедуру восстановления пароля еще раз.',true);
+//                },this))
+//
+//                .always($.proxy(function(){
+//                    this.getSpinner().hide($.proxy(this.showMessage, this));
+//                    this.enableInputs();
+//                   
+//                },this));
             }
         },
         
@@ -660,81 +782,123 @@
             if(this.checkChangePasswordForm()){
                 this.setFormFieldStateClear('password1');
                 this.setFormFieldStateClear('password2');
-                this.clearMessage();
-                this.getSpinner().show(this.nls('message_spinner_change_password'));//'Смена пароля...');
                 this.disableInputs();
-                $.ajax('/api/auth/change-password', {
+                this.getSpinner().show(this.nls('message_spinner_change_password'));//'Смена пароля...');
+                
+                this.ajax('/api/auth/change-password', {
                     data:{
                         pass: this.inputs('passwordOld').val(),
                         pass1: this.inputs('password1').val(),
                         pass2: this.inputs('password2').val()
                     },
-                    dataType: 'json',
-                    type: 'post'
-                })
-                
-                .done($.proxy(function(data){
-                    console.dir({'data': data});
-                    if(0 === data.code){
-                        console.info('Password changed');
-//                        this.setMessage('Пароль изменен, теперь вы можете войти с новым паролем.');
-                        this.getSpinner().hide();
+                    spinner: false,
+                    showMessage: false,
+                    errorMessage: this.nls('message_error_change_password'),
+                    success: $.proxy(function(data){
+                        console.dir({'data': data});
                         $.brx.modalAlert(this.nls('message_password_changed'));//'Пароль изменен');
                         this.getTemplate().dialog('close');
-//                        this.hideModal();
-                    }else{
-                        this.processChangePasswordErrors($.brx.utils.handleErrors(data));
-                    }
-                },this))
+                    },this),
+                    complete: $.proxy(function(data){
+                        this.enableInputs();
+                        this.getSpinner().hide($.proxy(this.showMessage, this));
+                    },this)
+                });
                 
-                .fail($.proxy(function(response){
-                    var message = $.brx.utils.processFail(response) 
-                        || this.nls('message_error_change_password');//'Ошибка смены пароля';
-                    this.setMessage(message, true);
-                },this))
-
-                .always($.proxy(function(){
-                    this.getSpinner().hide($.proxy(this.showMessage, this));
-                    this.enableInputs();
-                   
-                },this));
+//                this.clearMessage();
+//                this.getSpinner().show(this.nls('message_spinner_change_password'));//'Смена пароля...');
+//                $.ajax('/api/auth/change-password', {
+//                    data:{
+//                        pass: this.inputs('passwordOld').val(),
+//                        pass1: this.inputs('password1').val(),
+//                        pass2: this.inputs('password2').val()
+//                    },
+//                    dataType: 'json',
+//                    type: 'post'
+//                })
+//                
+//                .done($.proxy(function(data){
+//                    console.dir({'data': data});
+//                    if(0 === data.code){
+//                        console.info('Password changed');
+////                        this.setMessage('Пароль изменен, теперь вы можете войти с новым паролем.');
+//                        this.getSpinner().hide();
+//                        $.brx.modalAlert(this.nls('message_password_changed'));//'Пароль изменен');
+//                        this.getTemplate().dialog('close');
+////                        this.hideModal();
+//                    }else{
+//                        this.processChangePasswordErrors($.brx.utils.handleErrors(data));
+//                    }
+//                },this))
+//                
+//                .fail($.proxy(function(response){
+//                    var message = $.brx.utils.processFail(response) 
+//                        || this.nls('message_error_change_password');//'Ошибка смены пароля';
+//                    this.setMessage(message, true);
+//                },this))
+//
+//                .always($.proxy(function(){
+//                    this.getSpinner().hide($.proxy(this.showMessage, this));
+//                    this.enableInputs();
+//                   
+//                },this));
             }
         },
         
         buttonLogoutClicked: function() {
             if(true){
-                this.clearMessage();
-                this.getSpinner().show(this.nls('message_spinner_signout'));//'Выполняется выход...');
                 this.disableInputs();
-                $.ajax('/api/auth/logout', {
+                this.getSpinner().show(this.nls('message_spinner_signout'));//'Выполняется выход...');
+                
+                this.ajax('/api/auth/logout', {
                     data:{
                         _wpnonce: this.get('wpnonce')
                     },
-                    dataType: 'json',
-                    type: 'post'
-                })
-                
-                .done($.proxy(function(data){
-                    console.dir({'data': data});
-                    if(0 === data.code){
+                    spinner: false,
+                    showMessage: false,
+                    errorMessage: this.nls('message_error_signing_out'),
+                    success:$.proxy(function(data){
+                        console.dir({'data': data});
                         this.setMessage(this.nls('message_signed_out'));//'Выход выполнен, до новых встреч!');
-//                        window.location = ''+window.location;
                         $.brx.utils.loadPage();
-                    }else{
-                        this.processLoginErrors($.brx.utils.handleErrors(data));
-                    }
-                },this))
+                    },this),
+                    complete: $.proxy(function(data){
+                        this.enableInputs();
+                        this.getSpinner().hide($.proxy(this.showMessage, this));
+                    },this)
+                });
                 
-                .fail($.proxy(function(response){
-                    var message = $.brx.utils.processFail(response) 
-                        || this.nls('message_error_signing_out');//'Ошибка: выход не выполнен';
-                    this.setMessage(message, true);
-                },this))
-
-                .always($.proxy(function(){
-                   this.getSpinner().hide($.proxy(this.showMessage, this));
-                    this.enableInputs();
-                },this));
+//                this.clearMessage();
+//                this.getSpinner().show(this.nls('message_spinner_signout'));//'Выполняется выход...');
+//                $.ajax('/api/auth/logout', {
+//                    data:{
+//                        _wpnonce: this.get('wpnonce')
+//                    },
+//                    dataType: 'json',
+//                    type: 'post'
+//                })
+//                
+//                .done($.proxy(function(data){
+//                    console.dir({'data': data});
+//                    if(0 === data.code){
+//                        this.setMessage(this.nls('message_signed_out'));//'Выход выполнен, до новых встреч!');
+////                        window.location = ''+window.location;
+//                        $.brx.utils.loadPage();
+//                    }else{
+//                        this.processLoginErrors($.brx.utils.handleErrors(data));
+//                    }
+//                },this))
+//                
+//                .fail($.proxy(function(response){
+//                    var message = $.brx.utils.processFail(response) 
+//                        || this.nls('message_error_signing_out');//'Ошибка: выход не выполнен';
+//                    this.setMessage(message, true);
+//                },this))
+//
+//                .always($.proxy(function(){
+//                   this.getSpinner().hide($.proxy(this.showMessage, this));
+//                    this.enableInputs();
+//                },this));
             }
         },
         
@@ -748,35 +912,56 @@
                     return false;
                 }else{
                     this.setFormFieldStateClear('email2');
-                    this.clearMessage();
-                    this.getSpinner().show(this.nls('message_spinner_validating_email'));//'Проверка адреса...');
-                    $.ajax('/api/auth/check-email', {
+                    
+                    this.ajax('/api/auth/check-email', {
                         data:{
                             email: email
                         },
-                        dataType: 'json',
-                        type: 'post'
-                    })
-
-                    .done($.proxy(function(data){
-                        console.dir({'data': data});
-                        var email = this.inputs('email2').val();
-                        if(data.payload.email === email){
-                            if(0 === data.code){
-                                console.info('Email ' + email + ' available');
-                            }else{
-                                this.processJoinErrors($.brx.utils.handleErrors(data));
+                        spinner: this.getSpinner(),
+                        spinnerMessage: this.nls('message_spinner_validating_email'),
+                        success: $.proxy(function(data){
+                            console.dir({'data': data});
+                            var email = this.inputs('email2').val();
+                            if(data.payload.email === email){
+                                if(0 === data.code){
+                                    console.info('Email ' + email + ' available');
+                                }else{
+                                    this.processErrors($.brx.Ajax.handleErrors(data));
+                                }
                             }
-                        }
-                        this.options.validEmails[data.payload.email] = data.code === 0?1:0;
-                    },this))
-
-                    .fail($.proxy(function(){
-                    },this))
-
-                    .always($.proxy(function(){
-                       this.getSpinner().hide($.proxy(this.showMessage, this));
-                    },this));
+                            this.options.validEmails[data.payload.email] = data.code === 0?1:0;
+                        },this)
+                    });
+                    
+//                    this.clearMessage();
+//                    this.getSpinner().show(this.nls('message_spinner_validating_email'));//'Проверка адреса...');
+//                    $.ajax('/api/auth/check-email', {
+//                        data:{
+//                            email: email
+//                        },
+//                        dataType: 'json',
+//                        type: 'post'
+//                    })
+//
+//                    .done($.proxy(function(data){
+//                        console.dir({'data': data});
+//                        var email = this.inputs('email2').val();
+//                        if(data.payload.email === email){
+//                            if(0 === data.code){
+//                                console.info('Email ' + email + ' available');
+//                            }else{
+//                                this.processJoinErrors($.brx.utils.handleErrors(data));
+//                            }
+//                        }
+//                        this.options.validEmails[data.payload.email] = data.code === 0?1:0;
+//                    },this))
+//
+//                    .fail($.proxy(function(){
+//                    },this))
+//
+//                    .always($.proxy(function(){
+//                       this.getSpinner().hide($.proxy(this.showMessage, this));
+//                    },this));
                     
                     return false;
                 }
@@ -793,35 +978,56 @@
                     return false;
                 }else{
                     this.setFormFieldStateClear('name');
-                    this.clearMessage();
-                    this.getSpinner().show(this.nls('message_spinner_validating_name'));//'Проверка имени...');
-                    $.ajax('/api/auth/check-name', {
+                    
+                    this.ajax('/api/auth/check-name', {
                         data:{
                             login: login
                         },
-                        dataType: 'json',
-                        type: 'post'
-                    })
-
-                    .done($.proxy(function(data){
-                        console.dir({'data': data});
-                        var login = this.inputs('name').val();
-                        if(data.payload.login === login){
-                            if(0 === data.code){
-                                console.info('Name '+login+' available');
-                            }else{
-                                this.processJoinErrors($.brx.utils.handleErrors(data));
+                        spinner: this.getSpinner(),
+                        spinnerMessage: this.nls('message_spinner_validating_name'),
+                        success: $.proxy(function(data){
+                            console.dir({'data': data});
+                            var login = this.inputs('name').val();
+                            if(data.payload.login === login){
+                                if(0 === data.code){
+                                    console.info('Name '+login+' available');
+                                }else{
+                                    this.processErrors($.brx.Ajax.handleErrors(data));
+                                }
                             }
-                        }
-                        this.options.validNames[data.payload.login] = data.code === 0?1:0;
-                    },this))
-
-                    .fail($.proxy(function(){
-                    },this))
-
-                    .always($.proxy(function(){
-                       this.getSpinner().hide($.proxy(this.showMessage, this));
-                    },this));
+                            this.options.validNames[data.payload.login] = data.code === 0?1:0;
+                        },this)
+                    });
+                    
+//                    this.clearMessage();
+//                    this.getSpinner().show(this.nls('message_spinner_validating_name'));//'Проверка имени...');
+//                    $.ajax('/api/auth/check-name', {
+//                        data:{
+//                            login: login
+//                        },
+//                        dataType: 'json',
+//                        type: 'post'
+//                    })
+//
+//                    .done($.proxy(function(data){
+//                        console.dir({'data': data});
+//                        var login = this.inputs('name').val();
+//                        if(data.payload.login === login){
+//                            if(0 === data.code){
+//                                console.info('Name '+login+' available');
+//                            }else{
+//                                this.processJoinErrors($.brx.utils.handleErrors(data));
+//                            }
+//                        }
+//                        this.options.validNames[data.payload.login] = data.code === 0?1:0;
+//                    },this))
+//
+//                    .fail($.proxy(function(){
+//                    },this))
+//
+//                    .always($.proxy(function(){
+//                       this.getSpinner().hide($.proxy(this.showMessage, this));
+//                    },this));
                     return false;
                 }
             }
