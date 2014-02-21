@@ -27,5 +27,6 @@ return array(
     'link_login' => 'Sign in',
     'link_join' => 'Join us',
     'link_change_password' => 'Change password',
+    'message_required' => 'Required field',
     
 );

@@ -102,21 +102,25 @@
                 'inputs': this.options.inputs,
                 'hints': this.options.hints
             });
-
-            
-            this.getTemplate().dialog({
-                autoOpen: this.get('popup'),
-//                height: 410,
-                width: 'auto',
-                modal: true,
-                resizable: false,
-                open: $.proxy(function(){
-                    this.clearForm();
-                }, this)
-            });
-            if(!this.get('popup')){
-                this.getTemplate().dialog('close');
+            this.getWindow();
+            if(this.get('popup')){
+                this.getWindow().open();
             }
+            
+//            this.getTemplate().dialog({
+//                autoOpen: this.get('popup'),
+//                width: 'auto',
+//                modal: true,
+//                resizable: false,
+//                open: $.proxy(function(){
+//                    this.clearForm();
+//                }, this)
+//            });
+//            if(!this.get('popup')){
+//                this.getTemplate().dialog('close');
+//            }
+            
+            
 //            this.modal({
 ////                height: 410,
 //                width: 410,
@@ -124,7 +128,7 @@
 //                title: "Авторизация"
 //            });
             
-            this.getTemplate().show();
+//            this.getTemplate().show();
 //            $('a[href*="/wp-login.php"], a[href*="#login"]', document).click($.proxy(function(event){
             $( document ).on( "click", 'a[href*="/wp-login.php"], a[href*="#login"]', $.proxy(function(event){
                 event.preventDefault();
@@ -171,6 +175,19 @@
             return parseInt($.wp.currentUser.id)>0;
         },
         
+        getWindow: function(){
+            if(!this.get('window')){
+                var w = $.brx.Modals.create(this.$el, {
+//                var w = $.brx.Modals.create('', {
+//                    css:{
+//                        width: '450px'
+//                    }
+                });
+                this.set('window', w);
+            }
+            
+            return this.get('window');
+        },
         
         getMessageBox: function(){
             return this.option('messageBox');
@@ -193,7 +210,6 @@
         
         clearMessage: function(){
             this.getMessageBox().text('').hide();
-//            this.getMessageBox().dialog('close');
         },
         
         
@@ -238,39 +254,32 @@
             this.option('buttonLogout').css('display', 'logout' === screen?'inline':'none');
             this.option('screen',  screen);
             this.option('linksBox').css('display', this.isLoggedIn()?'none':'block');
-            var height = 410;
-            switch(screen){
-                case 'login':
-                    height = 390;
-                    break;
-                case 'join':
-                    height = 390;
-                    break;
-                case 'forgotPassword':
-                    height = 390;
-                    break;
-                case 'changePassword':
-                    height = 400;
-                    break;
-                case 'logout':
-                    height = 220;
-                    break;
-            }
-//            if(this.get('uiFramework') == 'jQueryUI'){
-//                if(this.getTemplate().data('dialog').isOpen()){
-//                    this.getTemplate().data('dialog').close();
-//                    this.getTemplate().data('dialog').option('height', height);
-//                    this.getTemplate().data('dialog').open();
-//                }else{
-//                    this.getTemplate().data('dialog').option('height', height);
-//                }
-//                
+//            var height = 410;
+//            switch(screen){
+//                case 'login':
+//                    height = 390;
+//                    break;
+//                case 'join':
+//                    height = 390;
+//                    break;
+//                case 'forgotPassword':
+//                    height = 390;
+//                    break;
+//                case 'changePassword':
+//                    height = 400;
+//                    break;
+//                case 'logout':
+//                    height = 220;
+//                    break;
 //            }
             if(this.get('titleLocation') === 'header'){
-                this.getTemplate().data('dialog').option('title', screenBox.attr('screen-title'));
+//                this.getTemplate().data('dialog').option('title', screenBox.attr('screen-title'));
+                this.getWindow().set('title', screenBox.attr('screen-title'));
+                this.getWindow().render();
                 screenBox.find('h2').hide();
             }else{
-                this.getTemplate().data('dialog').option('title', this.nls('header_default'));
+//                this.getTemplate().data('dialog').option('title', this.nls('header_default'));
+                this.getWindow().set('title', this.nls('header_default'));
                 screenBox.find('h2').show();
             }
             $(firstInput).focus();
@@ -282,7 +291,8 @@
         },
         
         openLoginScreen: function(event){
-            this.getTemplate().dialog('open');
+//            this.getTemplate().dialog('open');
+            this.getWindow().open();
             this.showLoginScreen();
 //            this.showModal();
         },
@@ -292,7 +302,8 @@
         },
         
         openJoinScreen: function(event){
-            this.getTemplate().dialog('open');
+//            this.getTemplate().dialog('open');
+            this.getWindow().open();
             this.showJoinScreen();
 //            this.showModal();
         },
@@ -302,7 +313,8 @@
         },
         
         openForgotPasswordScreen: function(event){
-            this.getTemplate().dialog('open');
+//            this.getTemplate().dialog('open');
+            this.getWindow().open();
             this.showForgotPasswordScreen();
 //            this.showModal();
         },
@@ -312,7 +324,8 @@
         },
         
         openChangePasswordScreen: function(event){
-            this.getTemplate().dialog('open');
+//            this.getTemplate().dialog('open');
+            this.getWindow().open();
             this.showChangePasswordScreen();
 //            this.showModal();
         },
@@ -322,8 +335,9 @@
         },
         
         openLogoutScreen: function(event){
+            this.getWindow().open();
             this.showLogoutScreen();
-            this.getTemplate().dialog('open');
+//            this.getTemplate().dialog('open');
 //            this.showModal();
         },
         
@@ -517,6 +531,7 @@
 //        },
         
         buttonLoginClicked: function(event){
+            console.info('sss');
             event.preventDefault();
             if(this.checkLoginForm()){
                 this.setFormFieldStateClear('email1');
@@ -796,8 +811,10 @@
                     errorMessage: this.nls('message_error_change_password'),
                     success: $.proxy(function(data){
                         console.dir({'data': data});
-                        $.brx.modalAlert(this.nls('message_password_changed'));//'Пароль изменен');
-                        this.getTemplate().dialog('close');
+                        this.getWindow().close();
+                        $.brx.Modals.alert(this.nls('message_password_changed'));
+//                        $.brx.modalAlert(this.nls('message_password_changed'));//'Пароль изменен');
+//                        this.getTemplate().dialog('close');
                     },this),
                     complete: $.proxy(function(data){
                         this.enableInputs();
@@ -1037,7 +1054,8 @@
         
         
         buttonCloseClicked: function(event){
-            this.getTemplate().dialog('close');
+            this.getWindow().close();
+//            this.getTemplate().dialog('close');
 //            this.hideModal();
         },
         
@@ -1051,28 +1069,40 @@
                 case 'auth_required':
                     message = message || 
                     this.nls('message_auth_required');//'Для выполнения данной операции необходимо авторизоваться на сайте';
-                    $.brx.modalDialog(message, {
-                        title: this.nls('dialog_title_auth_required'),//'Требуется авторизация',
+                    $.brx.Modals.show({
+                        content: message,
+                        title: this.nls('dialog_title_auth_required'),
                         buttons: [
                             {text: this.nls('button_stay_anonymous')/*'Продолжить анонимно'*/, click: function(){
-//                                    $(this).dialog('close');
                             }},
                             {text: this.nls('button_sign_up')/*'Зарегистрироваться'*/, click: function(){
                                     $(document).trigger('authForm.join');
-//                                    $(this).dialog('close');
                             }},
                             {text: this.nls('button_sign_in')/*'Войти'*/, click: function(){
                                     $(document).trigger('authForm.login');
-//                                    $(this).dialog('close');
                             }}
-                        ],
-                        width: 400
+                        ]
                     });
+//                    $.brx.modalDialog(message, {
+//                        title: this.nls('dialog_title_auth_required'),//'Требуется авторизация',
+//                        buttons: [
+//                            {text: this.nls('button_stay_anonymous')/*'Продолжить анонимно'*/, click: function(){
+//                            }},
+//                            {text: this.nls('button_sign_up')/*'Зарегистрироваться'*/, click: function(){
+//                                    $(document).trigger('authForm.join');
+//                            }},
+//                            {text: this.nls('button_sign_in')/*'Войти'*/, click: function(){
+//                                    $(document).trigger('authForm.login');
+//                            }}
+//                        ],
+//                        width: 400
+//                    });
                     return true;
                 case 'permission_required':
                     message = message || 
                     this.nls('message_permission_required');//'У вас недостаточно прав для выполнения данной операции';
-                    $.brx.modalAlert(message);
+                    $.brx.Modals.alert(message);
+//                    $.brx.modalAlert(message);
                     return true;
                 case 'reputation_required':
                     break;

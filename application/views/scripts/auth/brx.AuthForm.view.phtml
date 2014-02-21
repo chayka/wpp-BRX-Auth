@@ -19,14 +19,14 @@ NlsHelper::load('views/auth/authForm');
         </div-->
         <form data-attach-point="formLogin" data-attach-event="submit: buttonLoginClicked">
             <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
-            <div class="form_field email_login" data-attach-point="fields.email1" check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>">
+            <div class="form_field email_login" data-attach-point="fields.email1" data-check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>" data-check-required="<?php NlsHelper::__('message_required');?>">
                 <label for="email"><?php NlsHelper::__('label_email')?>:</label>
                 <div class="form_field-input_box">
                     <input type="text" name="email" value="" class="" />
                 </div>
                 <div class="form_field-tips"></div>
             </div>
-            <div class="form_field password" data-attach-point="fields.password">
+            <div class="form_field password" data-attach-point="fields.password" data-check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>" data-check-required="<?php NlsHelper::__('message_required');?>">
                 <label for="password"><?php NlsHelper::__('label_password')?>:</label>
                 <div class="form_field-input_box">
                     <input type="password" name="password" id="password" value="" class="" />
@@ -40,14 +40,14 @@ NlsHelper::load('views/auth/authForm');
         <h2><?php NlsHelper::__('header_join_screen')?></h2>
         <form data-attach-point="formJoin" data-attach-event="submit: buttonJoinClicked">
             <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
-            <div class="form_field email_join" data-attach-point="fields.email2" check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>">
+            <div class="form_field email_join" data-attach-point="fields.email2" data-check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>" data-check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>" data-check-required="<?php NlsHelper::__('message_required');?>">
                 <label for="email"><?php NlsHelper::__('label_email')?>:</label>
                 <div class="form_field-input_box">
                     <input type="text" name="email" value="" class="" />
                 </div>
                 <div class="form_field-tips"></div>
             </div>
-            <div class="form_field name" data-attach-point="fields.name" check-regexp-pattern="^[A-Za-z\d\-]+$" check-regexp-message="<?php NlsHelper::__('message_validate_username');?>">
+            <div class="form_field name" data-attach-point="fields.name" data-check-regexp-pattern="^[A-Za-z\d\-]+$" check-regexp-message="<?php NlsHelper::__('message_validate_username');?>" data-check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>" data-check-required="<?php NlsHelper::__('message_required');?>">
                 <label for="name"><?php NlsHelper::__('label_username')?>:</label>
                 <div class="form_field-input_box">
                     <input type="text" name="name" class="" />
@@ -70,7 +70,7 @@ NlsHelper::load('views/auth/authForm');
                 <div class="form_box-comments">
                     <?php NlsHelper::__('message_forgot_password')?>
                 </div>
-                <div class="form_field email_login" data-attach-point="fields.email3" check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>">
+                <div class="form_field email_login" data-attach-point="fields.email3" data-check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>" data-check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>" data-check-required="<?php NlsHelper::__('message_required');?>">
                     <label for="email"><?php NlsHelper::__('label_email')?>:</label>
                     <div class="form_field-input_box">
                         <input type="text" name="email" value="" class="" />
@@ -83,21 +83,21 @@ NlsHelper::load('views/auth/authForm');
         <h2><?php NlsHelper::__('header_change_password_screen');?></h2>
             <form data-attach-point="formChangePassword" data-attach-event="submit: buttonChangePasswordClicked">
                 <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
-                <div class="form_field passwordOld" data-attach-point="fields.passwordOld">
+                <div class="form_field passwordOld" data-attach-point="fields.passwordOld" data-check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>" data-check-required="<?php NlsHelper::__('message_required');?>">
                     <label for="passOld"><?php NlsHelper::__('label_old_pass');?>:</label>
                     <div class="form_field-input_box">
                         <input type="password" name="passOld" value="" class="" />
                     </div>
                     <div class="form_field-tips"></div>
                 </div>
-                <div class="form_field password1" data-attach-point="fields.password1">
+                <div class="form_field password1" data-attach-point="fields.password1" data-check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>" data-check-required="<?php NlsHelper::__('message_required');?>">
                     <label for="passl"><?php NlsHelper::__('label_new_pass');?>:</label>
                     <div class="form_field-input_box">
                         <input type="password" name="pass1" value="" class="" />
                     </div>
                     <div class="form_field-tips"></div>
                 </div>
-                <div class="form_field password2" data-attach-point="fields.password2">
+                <div class="form_field password2" data-attach-point="fields.password2" data-check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>" data-check-required="<?php NlsHelper::__('message_required');?>">
                     <label for="pass2"><?php NlsHelper::__('label_once_again');?>:</label>
                     <div class="form_field-input_box">
                         <input type="password" name="pass2" value="" class="" />
@@ -125,7 +125,7 @@ NlsHelper::load('views/auth/authForm');
         <button data-attach-point="buttons.resetPassword" data-attach-event="buttonResetPasswordClicked" class="button_reset_password"><?php NlsHelper::__('button_reset_password');?></button>
         <button data-attach-point="buttons.changePassword" data-attach-event="buttonChangePasswordClicked" class="button_change_password"><?php NlsHelper::__('button_change_password');?></button>
         <button data-attach-point="buttonLogout" data-attach-event="buttonLogoutClicked" class="button_logout"><?php NlsHelper::__('button_logout');?></button>
-        <button data-attach-point="buttonClose" data-attach-event="click: buttonCloseClicked" class="button_cancel"><?php NlsHelper::__('button_cancel')?></button>
+        <button data-attach-point="buttonClose" data-attach-event="buttonCloseClicked" class="button_cancel"><?php NlsHelper::__('button_cancel')?></button>
     </div>
     <div class="form_box-links" data-attach-point="linksBox">
         <span data-attach-point="links.login" data-attach-event="click: showLoginScreen" class="link" ><?php NlsHelper::__('link_login');?></span>

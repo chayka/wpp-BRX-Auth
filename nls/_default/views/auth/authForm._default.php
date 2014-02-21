@@ -27,5 +27,6 @@ return array(
     'link_login' => 'Войти',
     'link_join' => 'Зарегистрироваться',
     'link_change_password' => 'Сменить пароль',
+    'message_required' => 'Необходимо заполнить',
     
 );
