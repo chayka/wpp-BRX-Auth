@@ -11,8 +11,8 @@
             template: null,
             elementAsTemplate: true,
             screen: null,
-            activationKey: null,
-            activationLogin: null,
+            key: null,
+            login: null,
             popup: false,
             validEmails: {},
             validNames: {},
@@ -26,9 +26,9 @@
         postCreate: function(){
             console.dir({'authForm.postCreate': this});
             this.set('screen', this.$el.attr('screen'));
-            this.set('activationKey',  this.$el.attr('key'));
-            this.set('activationLogin',  this.$el.attr('login'));
-            this.set('popup',  !_.empty(this.$el.attr('popup')) || this.popup);
+//            this.set('activationKey',  this.$el.attr('key'));
+//            this.set('activationLogin',  this.$el.attr('login'));
+//            this.set('popup',  !_.empty(this.$el.attr('popup')) || this.popup);
             if(this.getSpinner()){
                 this.getSpinner().getTemplate()
                     .css('display', 'inline-block');
@@ -238,7 +238,7 @@
             var firstInput = screenBox.find('input[type=text]')[0];
             console.dir({'firstInput':firstInput});
             
-            var canChangePw = !_.empty(this.get('activationKey'));
+            var canChangePw = !_.empty(this.get('key'));
             
             this.option('linksBox').css('display', 'logout' === screen?'none':'block');
             this.option('links').login.css('display', 'login' === screen?'none':'inline');
@@ -724,8 +724,8 @@
                 
                 this.ajax('/api/auth/reset-password', {
                     data:{
-                        key: this.get('activationKey'),
-                        login: this.get('activationLogin'),
+                        key: this.get('key'),
+                        login: this.get('login'),
                         pass1: this.inputs('password1').val(),
                         pass2: this.inputs('password2').val()
                     },
@@ -734,8 +734,8 @@
                     errorMessage: this.nls('message_error_wrong_code'),
                     success: $.proxy(function(data){
                         console.dir({'data': data});
-                        this.option('activationKey',  null);
-                        this.option('activationLogin',  null);
+                        this.option('key',  null);
+                        this.option('login',  null);
                         this.setMessage(this.nls('message_password_set_signing_in'));//'Пароль изменен, выполняется вход');
                         $.brx.utils.loadPage();
                     },this),
