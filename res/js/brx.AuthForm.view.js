@@ -25,7 +25,7 @@
         
         postCreate: function(){
             console.dir({'authForm.postCreate': this});
-            this.set('screen', this.$el.attr('screen'));
+//            this.set('screen', this.$el.attr('screen'));
 //            this.set('activationKey',  this.$el.attr('key'));
 //            this.set('activationLogin',  this.$el.attr('login'));
 //            this.set('popup',  !_.empty(this.$el.attr('popup')) || this.popup);
