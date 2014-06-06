@@ -19,6 +19,12 @@ NlsHelper::load('views/auth/authForm');
         </div-->
         <form data-attach-point="formLogin" data-attach-event="submit: buttonLoginClicked">
             <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
+            <div class="social_logins" data-attach-point="socialBox">
+                <h2>Войти через социальные сети:</h2>
+                <div class="fb-login-button" data-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false"></div>
+                <div class="or_common">или</div>
+                <!--<button data-attach-event="onFacebookLoginButtonClicked">Facebook</button>-->
+            </div>
             <div class="form_field email_login" data-attach-point="fields.email1" data-check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>" data-check-required="<?php NlsHelper::__('message_required');?>">
                 <label for="email"><?php NlsHelper::__('label_email')?>:</label>
                 <div class="form_field-input_box">
@@ -27,7 +33,7 @@ NlsHelper::load('views/auth/authForm');
                 <div class="form_field-tips"></div>
             </div>
             <div class="form_field password" data-attach-point="fields.password" data-check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>" data-check-required="<?php NlsHelper::__('message_required');?>">
-                <label for="password"><?php NlsHelper::__('label_password')?>:</label>
+                <label for="password" data-attach-event="dblclick: showSocialLogin"><?php NlsHelper::__('label_password')?>:</label>
                 <div class="form_field-input_box">
                     <input type="password" name="password" id="password" value="" class="" />
                 </div>

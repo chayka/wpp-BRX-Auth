@@ -151,6 +151,14 @@ class wpp_BRX_Auth extends WpPlugin {
         }
     }
     
+    public static function renderFbInit($appId = 'YOUR_APP_ID', $locale = 'en_US'){
+//        $view = new Zend_View();
+////        NlsHelper::setNlsDir(WPP_BRX_AUTH_PATH.'nls');
+//        $view->setScriptPath(WPP_BRX_AUTH_PATH.'application/views/scripts/auth');
+//        echo $view->render('fb-login-callback.phtml');
+        SocialHelper::fbInit($appId, $locale, 'onFBlogin');
+    }
+    
     public function renderLoginForm(){
         $view = new Zend_View();
         NlsHelper::setNlsDir(WPP_BRX_AUTH_PATH.'nls');
