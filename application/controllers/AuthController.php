@@ -162,6 +162,20 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
         }
     }
     
+    public function fbLoginAction(){
+        $accessToken = InputHelper::getParam('accessToken');
+        $expiresIn = InputHelper::getParam('expiresIn');
+        $signedRequest = InputHelper::getParam('signedRequest');
+        $userID = InputHelper::getParam('userID');
+        
+        JsonHelper::respond(array(
+            'accessToken' => $accessToken,
+            'expiresIn' => $expiresIn,
+            'signedRequest' => $signedRequest,
+            'userID' => $userID,
+        ));
+    }
+    
     public function logoutAction(){
         $errors = new WP_Error();
 //	check_admin_referer('log-out');
