@@ -158,6 +158,27 @@ class wpp_BRX_Auth extends WpPlugin {
 //        echo $view->render('fb-login-callback.phtml');
         SocialHelper::fbInit($appId, $locale, 'onFBlogin');
     }
+
+    public static function getAvatar($avatar, $id_or_email){
+        $user = is_email($id_or_email)?
+                UserModel::selectByEmail($id_or_email):
+                UserModel::selectById($id_or_email);
+        if($user){
+            $metaAvatar = $user->getMeta('avatar');
+            if($metaAvatar){
+                $uploadDirs = wp_upload_dir();
+                $avatarsDir = $uploadDirs['basedir'].'/avatars';
+                $avatarsUrl = $uploadDirs['baseurl'].'/avatars';
+                $avatarFn = $avatarsDir.'/'.$metaAvatar;
+                $avatarUrl = $avatarsUrl.'/'.$metaAvatar;
+                if(file_exists($avatarFn)){
+                    return preg_replace("%src='[^']*'%", "src='$avatarUrl'", $avatar);
+                }
+            }
+        }
+        
+        return $avatar;
+    }
     
     public function renderLoginForm(){
         $view = new Zend_View();

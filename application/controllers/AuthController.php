@@ -203,6 +203,7 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
 
         // Get the GraphUser object for the current user:
         $me = null;
+        $avatarFnShort = null;
         try {
           $me = (new FacebookRequest(
             $session, 'GET', '/me'
@@ -222,7 +223,9 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
           Util::print_r($uploadDirs);
           $avatarsDir = $uploadDirs['basedir'].'/avatars';
           is_dir($avatarsDir) || mkdir($avatarsDir, 0777, true);
-          echo $avatarFn = $avatarsDir.'/'.$userID."@facebook.com.".  FileSystem::extension($pictureUrl);
+          $avatarFnShort = $userID."@facebook.com.".  FileSystem::extension($pictureUrl);
+          echo $avatarFn = $avatarsDir.'/'.$avatarFnShort;
+          
           file_exists($avatarFn) && FileSystem::delete($avatarFn);
           CurlHelper::download($avatarFn, $pictureUrl);
         } catch (FacebookRequestException $e) {
@@ -247,6 +250,7 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
                         ->insert();
                 if($wpUserId){
                     $user->updateMeta('fb_user_id', $userID);
+                    $user->updateMeta('avatar', $avatarFnShort);
                 }
             }
             JsonHelper::respond($user);
