@@ -201,7 +201,7 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
         $session = new FacebookSession($accessToken);
 
         // Get the GraphUser object for the current user:
-
+        $me = null;
         try {
           $me = (new FacebookRequest(
             $session, 'GET', '/me'
@@ -213,6 +213,27 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
           // The Graph API returned an error
         } catch (\Exception $e) {
           // Some other error occurred
+        }
+        
+        if($me && $me->getId() == $userID){
+            $user = UserModel::query()
+                    ->metaQuery('fb_user_id', $userID)
+                    ->selectOne();
+            if(!$user){
+                $user = new UserModel();
+                $wpUserId = 
+                    $user->setLogin('fb'.$userID)
+                        ->setEmail($userID."@facebook.com")
+                        ->setDisplayName($me->getName())
+                        ->setFirstName($me->getFistName())
+                        ->setLastName($me->getLastName())
+                        ->setPassword(wp_generate_password(12, false))
+                        ->insert();
+                if($wpUserId){
+                    $user->updateMeta('fb_user_id', $userID);
+                }
+            }
+            JsonHelper::respond($user);
         }
         
         JsonHelper::respond(array(
