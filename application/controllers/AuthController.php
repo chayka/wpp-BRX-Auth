@@ -32,6 +32,7 @@ require_once 'facebook-php-sdk-v4/src/Facebook/GraphSessionInfo.php';
 require_once 'facebook-php-sdk-v4/src/Facebook/GraphUser.php';
 use Facebook\FacebookSession;
 use Facebook\FacebookRequest;
+use Facebook\GraphObject;
 use Facebook\GraphUser;
 use Facebook\FacebookRequestException;
 
@@ -212,7 +213,7 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
           
           $picture = (new FacebookRequest(
             $session, 'GET', '/me/picture?redirect=false&width=160&height=160'
-          ))->execute()->getGraphObject();
+          ))->execute()->getGraphObject(GraphObject::className());
           Util::print_r($picture);
           echo $picture->getProperty('url');
           echo $picture->getProperty('is_silhouette');
