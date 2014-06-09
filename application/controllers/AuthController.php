@@ -15,7 +15,7 @@ require_once 'facebook-php-sdk-v4/src/Facebook/FacebookClientException.php';
 require_once 'facebook-php-sdk-v4/src/Facebook/FacebookHttpable.php';
 require_once 'facebook-php-sdk-v4/src/Facebook/FacebookCurl.php';
 require_once 'facebook-php-sdk-v4/src/Facebook/FacebookCurlHttpClient.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookJavascriptLoginHelper.php';
+require_once 'facebook-php-sdk-v4/src/Facebook/FacebookJavaScriptLoginHelper.php';
 require_once 'facebook-php-sdk-v4/src/Facebook/FacebookOtherException.php';
 require_once 'facebook-php-sdk-v4/src/Facebook/FacebookPageTabHelper.php';
 require_once 'facebook-php-sdk-v4/src/Facebook/FacebookPermissionException.php';
