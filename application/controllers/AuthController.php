@@ -250,9 +250,9 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
                         ->insert();
                 if($wpUserId){
                     $user->updateMeta('fb_user_id', $userID);
-                    $user->updateMeta('avatar', $avatarFnShort);
                 }
             }
+            $user->updateMeta('avatar', $avatarFnShort);
             JsonHelper::respond($user);
         }
         
