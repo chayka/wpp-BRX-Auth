@@ -206,7 +206,7 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
           $me = (new FacebookRequest(
             $session, 'GET', '/me'
           ))->execute()->getGraphObject(GraphUser::className());
-//          echo $me->getName();
+          echo $me->getName();
           echo $me->getId();
           Util::print_r($me);
         } catch (FacebookRequestException $e) {
