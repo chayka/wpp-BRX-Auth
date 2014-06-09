@@ -168,6 +168,8 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
         $signedRequest = InputHelper::getParam('signedRequest');
         $userID = InputHelper::getParam('userID');
         
+        FacebookSession::setDefaultApplication('155736051299351', '4b425360929f7f729c4866cc5d36b77c');
+        
         JsonHelper::respond(array(
             'accessToken' => $accessToken,
             'expiresIn' => $expiresIn,
