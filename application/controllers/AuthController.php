@@ -216,8 +216,9 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
           ))->execute()->getGraphObject(GraphObject::className());
           Util::print_r($picture);
           $pictureData = $picture->asArray();
-          echo Util::getItem($pictureData, 'url');
-          echo Util::getItem($pictureData, 'is_silhouette');
+          $pictureUrl = Util::getItem($pictureData, 'url');
+          $isSilhouette = Util::getItem($pictureData, 'is_silhouette');
+          Util::print_r(wp_upload_dir());
         } catch (FacebookRequestException $e) {
           // The Graph API returned an error
         } catch (\Exception $e) {
