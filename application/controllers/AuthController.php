@@ -6,7 +6,7 @@
  * @author borismossounov
  */
 require_once 'application/helpers/EmailHelper_wpp_BRX_Auth.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookSession.php';
+require_once 'library/facebook-php-sdk-v4/src/Facebook/FacebookSession.php';
 use Facebook\FacebookSession;
 
 class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
