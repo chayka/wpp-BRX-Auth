@@ -6,6 +6,8 @@
  * @author borismossounov
  */
 require_once 'application/helpers/EmailHelper_wpp_BRX_Auth.php';
+require_once 'facebook-php-sdk-v4/src/Facebook/FacebookSession.php';
+use Facebook\FacebookSession;
 
 class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
 
@@ -167,6 +169,7 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
         $expiresIn = InputHelper::getParam('expiresIn');
         $signedRequest = InputHelper::getParam('signedRequest');
         $userID = InputHelper::getParam('userID');
+        
         
         FacebookSession::setDefaultApplication('155736051299351', '4b425360929f7f729c4866cc5d36b77c');
         
