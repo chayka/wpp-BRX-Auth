@@ -8,6 +8,9 @@
 require_once 'application/helpers/EmailHelper_wpp_BRX_Auth.php';
 require_once 'facebook-php-sdk-v4/src/Facebook/FacebookSession.php';
 use Facebook\FacebookSession;
+use Facebook\FacebookRequest;
+use Facebook\GraphUser;
+use Facebook\FacebookRequestException;
 
 class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
 
@@ -172,6 +175,21 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
         
         
         FacebookSession::setDefaultApplication('155736051299351', '4b425360929f7f729c4866cc5d36b77c');
+        $session = new FacebookSession($accessToken);
+
+        // Get the GraphUser object for the current user:
+
+        try {
+          $me = (new FacebookRequest(
+            $session, 'GET', '/me'
+          ))->execute()->getGraphObject(GraphUser::className());
+//          echo $me->getName();
+          Util::print_r($me);
+        } catch (FacebookRequestException $e) {
+          // The Graph API returned an error
+        } catch (\Exception $e) {
+          // Some other error occurred
+        }
         
         JsonHelper::respond(array(
             'accessToken' => $accessToken,
