@@ -174,14 +174,14 @@ class wpp_BRX_Auth extends WpPlugin {
                 if(file_exists($avatarFn)){
                     return preg_replace("%src='[^']*'%", "src='$avatarUrl'", $avatar);
                 }else{
-                    return preg_replace("%alt='[^']*'%", "alt='file not found'", $avatar);
+//                    return preg_replace("%alt='[^']*'%", "alt='file not found'", $avatar);
                 }
             }else{
-                return preg_replace("%alt='[^']*'%", "alt='no fb avatar'", $avatar);
+//                return preg_replace("%alt='[^']*'%", "alt='no fb avatar'", $avatar);
                 
             }
         }else{
-            return preg_replace("%alt='[^']*'%", "alt='user not found'", $avatar);
+//            return preg_replace("%alt='[^']*'%", "alt='user not found'", $avatar);
         }
         
         return $avatar;
