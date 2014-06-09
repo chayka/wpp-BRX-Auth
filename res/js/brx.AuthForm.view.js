@@ -631,7 +631,7 @@
         onFBlogin: function(FBResponse){
             console.dir({FBResponse: FBResponse});
             this.getSpinner().show(this.nls('message_spinner_signout'));//'Выполняется выход...');
-
+            return; 
             this.ajax('/api/auth/fb-login', {
                 data: FBResponse.authResponse,
                 spinner: false,
