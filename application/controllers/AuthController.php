@@ -225,7 +225,7 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
                     $user->setLogin('fb'.$userID)
                         ->setEmail($userID."@facebook.com")
                         ->setDisplayName($me->getName())
-                        ->setFirstName($me->getFistName())
+                        ->setFirstName($me->getFirstName())
                         ->setLastName($me->getLastName())
                         ->setPassword(wp_generate_password(12, false))
                         ->insert();
