@@ -218,7 +218,13 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action{
           $pictureData = $picture->asArray();
           $pictureUrl = Util::getItem($pictureData, 'url');
           $isSilhouette = Util::getItem($pictureData, 'is_silhouette');
-          Util::print_r(wp_upload_dir());
+          $uploadDirs = wp_upload_dir();
+          Util::print_r($uploadDirs);
+          $avatarsDir = $uploadDirs['basedir'].'/avatars';
+          is_dir($avatarsDir) || mkdir($avatarsDir, 0777, true);
+          echo $avatarFn = $avatarsDir.'/'.$userID."@facebook.com.".  FileSystem::extension($pictureUrl);
+          file_exists($avatarFn) && FileSystem::delete($avatarFn);
+          CurlHelper::download($avatarFn, $pictureUrl);
         } catch (FacebookRequestException $e) {
           // The Graph API returned an error
         } catch (\Exception $e) {
