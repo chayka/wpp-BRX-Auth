@@ -790,7 +790,7 @@
                 success:$.proxy(function(data){
                     console.dir({'data': data});
                     this.setMessage(this.nls('message_signed_out'));//'Выход выполнен, до новых встреч!');
-//                    $.brx.utils.loadPage();
+                    $.brx.utils.loadPage();
                 },this),
                 complete: $.proxy(function(data){
                     this.enableInputs();
