@@ -17,7 +17,8 @@
             validNames: {},
             wpnonce: '',
             screens:{},
-            titleLocation: 'screen'
+            titleLocation: 'screen',
+            fb: null
         },
 
         
@@ -140,7 +141,19 @@
             
             $.brx.Ajax.addErrorHandler('authform', $.proxy(this.handleApiError, this));
             
-            window.onFBlogin = $.proxy(this.onFBlogin, this);
+            this.getFB();
+        },
+        
+        getFB: function(){
+            if(!this.get('fb') && window.FB){
+                // Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
+                // for any authentication related change, such as login, logout or session refresh. This means that
+                // whenever someone who was previously logged out tries to log in again, the correct case below 
+                // will be handled. 
+                window.FB.Event.subscribe('auth.authResponseChange', $.proxy(this.fbStatusChanged, this));
+                this.set('fb', window.FB);
+            }
+            return this.get('fb');
         },
         
         isLoggedIn: function(){
@@ -199,6 +212,7 @@
         },
         
         showScreen: function(screen){
+            this.getFB();
             this.clearForm();
             screen = screen || 'login';
             for(id in this.get('screens')){
@@ -244,36 +258,6 @@
             this.get('socialBox').show();
         },
         
-//        statusChangeCallback: function(response) {
-//        // Here we specify what we do with the response anytime this event occurs. 
-//            if (response.status === 'connected') {
-//            // The response object is returned with a status field that lets the app know the current
-//            // login status of the person. In this case, we're handling the situation where they 
-//            // have logged in to the app.
-//            // testAPI();
-//            cosole.dir({response: response});
-//            } else if (response.status === 'not_authorized') {
-//            // In this case, the person is logged into Facebook, but not into the app, so we call
-//            // FB.login() to prompt them to do so. 
-//            // In real-life usage, you wouldn't want to immediately prompt someone to login 
-//            // like this, for two reasons:
-//            // (1) JavaScript created popup windows are blocked by most browsers unless they 
-//            // result from direct interaction from people using the app (such as a mouse click)
-//            // (2) it is a bad experience to be continually prompted to login upon page load.
-//            FB.login();
-//            } else {
-//            // In this case, the person is not logged into Facebook, so we call the login() 
-//            // function to prompt them to do so. Note that at this stage there is no indication
-//            // of whether they are logged into the app. If they aren't then they'll see the Login
-//            // dialog right after they log in to Facebook. 
-//            // The same caveats as above apply to the FB.login() call here.
-//            FB.login();
-//            }
-//        },
-//        onFacebookLoginButtonClicked: function(event){
-//            event.preventDefault();
-//            window.FB.getLoginStatus($.proxy(this.statusChangeCallback, this));
-//        },
         
         showLoginScreen: function(event){
             if(window.FB){
@@ -603,6 +587,11 @@
         },
         
         buttonLogoutClicked: function() {
+            
+            if(this.getFB() && this.getFBuserId() && !this.get('fb_not_authorized')){
+                this.getFB().logout();
+            }
+            
             if(true){
                 this.disableInputs();
                 this.getSpinner().show(this.nls('message_spinner_signout'));//'Выполняется выход...');
@@ -626,28 +615,6 @@
                 });
                 
             }
-        },
-        
-        onFBlogin: function(FBResponse){
-            console.dir({FBResponse: FBResponse});
-            this.getSpinner().show(this.nls('message_spinner_signout'));//'Выполняется выход...');
-            return; 
-            this.ajax('/api/auth/fb-login', {
-                data: FBResponse.authResponse,
-                spinner: false,
-                showMessage: false,
-                errorMessage: this.nls('message_error_signing_out'),
-                success:$.proxy(function(data){
-                    console.dir({'data': data});
-                    this.setMessage(this.nls('message_signed_out'));//'Выход выполнен, до новых встреч!');
-//                    $.brx.utils.loadPage();
-                },this),
-                complete: $.proxy(function(data){
-                    this.enableInputs();
-                    this.getSpinner().hide($.proxy(this.showMessage, this));
-                },this)
-            });
-
         },
         
         checkEmailExists: function(event){
@@ -680,36 +647,6 @@
                             this.options.validEmails[data.payload.email] = data.code === 0?1:0;
                         },this)
                     });
-                    
-//                    this.clearMessage();
-//                    this.getSpinner().show(this.nls('message_spinner_validating_email'));//'Проверка адреса...');
-//                    $.ajax('/api/auth/check-email', {
-//                        data:{
-//                            email: email
-//                        },
-//                        dataType: 'json',
-//                        type: 'post'
-//                    })
-//
-//                    .done($.proxy(function(data){
-//                        console.dir({'data': data});
-//                        var email = this.inputs('email2').val();
-//                        if(data.payload.email === email){
-//                            if(0 === data.code){
-//                                console.info('Email ' + email + ' available');
-//                            }else{
-//                                this.processJoinErrors($.brx.utils.handleErrors(data));
-//                            }
-//                        }
-//                        this.options.validEmails[data.payload.email] = data.code === 0?1:0;
-//                    },this))
-//
-//                    .fail($.proxy(function(){
-//                    },this))
-//
-//                    .always($.proxy(function(){
-//                       this.getSpinner().hide($.proxy(this.showMessage, this));
-//                    },this));
                     
                     return false;
                 }
@@ -747,35 +684,6 @@
                         },this)
                     });
                     
-//                    this.clearMessage();
-//                    this.getSpinner().show(this.nls('message_spinner_validating_name'));//'Проверка имени...');
-//                    $.ajax('/api/auth/check-name', {
-//                        data:{
-//                            login: login
-//                        },
-//                        dataType: 'json',
-//                        type: 'post'
-//                    })
-//
-//                    .done($.proxy(function(data){
-//                        console.dir({'data': data});
-//                        var login = this.inputs('name').val();
-//                        if(data.payload.login === login){
-//                            if(0 === data.code){
-//                                console.info('Name '+login+' available');
-//                            }else{
-//                                this.processJoinErrors($.brx.utils.handleErrors(data));
-//                            }
-//                        }
-//                        this.options.validNames[data.payload.login] = data.code === 0?1:0;
-//                    },this))
-//
-//                    .fail($.proxy(function(){
-//                    },this))
-//
-//                    .always($.proxy(function(){
-//                       this.getSpinner().hide($.proxy(this.showMessage, this));
-//                    },this));
                     return false;
                 }
             }
@@ -814,20 +722,6 @@
                             }}
                         ]
                     });
-//                    $.brx.modalDialog(message, {
-//                        title: this.nls('dialog_title_auth_required'),//'Требуется авторизация',
-//                        buttons: [
-//                            {text: this.nls('button_stay_anonymous')/*'Продолжить анонимно'*/, click: function(){
-//                            }},
-//                            {text: this.nls('button_sign_up')/*'Зарегистрироваться'*/, click: function(){
-//                                    $(document).trigger('authForm.join');
-//                            }},
-//                            {text: this.nls('button_sign_in')/*'Войти'*/, click: function(){
-//                                    $(document).trigger('authForm.login');
-//                            }}
-//                        ],
-//                        width: 400
-//                    });
                     return true;
                 case 'permission_required':
                     message = message || 
@@ -839,7 +733,72 @@
                     break;
             }
             return false;
-        },        
+        }, 
+        
+        getFBuserId: function(){
+            return $.wp.currentUser.get('meta.fb_user_id');
+        },
+
+        onFacebookLoginButtonClicked: function(event){
+            event.preventDefault();
+            var fb = this.getFB();
+            if(fb){
+                fb.getLoginStatus($.proxy(this.fbStatusChanged, this));
+            }
+        },
+        
+        fbStatusChanged: function(response) {
+            // Here we specify what we do with the response anytime this event occurs. 
+            if (response.status === 'connected') {
+                // The response object is returned with a status field that lets the app know the current
+                // login status of the person. In this case, we're handling the situation where they 
+                // have logged in to the app.
+                // testAPI();
+                this.getFBuserId() !== response.authResponse.userID && this.onFBlogin(response);
+            } else if (response.status === 'not_authorized') {
+                // In this case, the person is logged into Facebook, but not into the app, so we call
+                // FB.login() to prompt them to do so. 
+                // In real-life usage, you wouldn't want to immediately prompt someone to login 
+                // like this, for two reasons:
+                // (1) JavaScript created popup windows are blocked by most browsers unless they 
+                // result from direct interaction from people using the app (such as a mouse click)
+                // (2) it is a bad experience to be continually prompted to login upon page load.
+//                FB.login();
+                this.set('fb_not_autorized', true);
+                this.getFBuserId() && this.buttonLogoutClicked();
+            } else {
+                // In this case, the person is not logged into Facebook, so we call the login() 
+                // function to prompt them to do so. Note that at this stage there is no indication
+                // of whether they are logged into the app. If they aren't then they'll see the Login
+                // dialog right after they log in to Facebook. 
+                // The same caveats as above apply to the FB.login() call here.
+                this.set('fb_not_autorized', true);
+                this.getFBuserId() && this.buttonLogoutClicked();
+//                FB.login();
+            }
+        },
+        
+        onFBlogin: function(FBResponse){
+            console.dir({FBResponse: FBResponse});
+            this.getSpinner().show(this.nls('message_spinner_signout'));//'Выполняется выход...');
+            return; 
+            this.ajax('/api/auth/fb-login', {
+                data: FBResponse.authResponse,
+                spinner: false,
+                showMessage: false,
+                errorMessage: this.nls('message_error_signing_out'),
+                success:$.proxy(function(data){
+                    console.dir({'data': data});
+                    this.setMessage(this.nls('message_signed_out'));//'Выход выполнен, до новых встреч!');
+//                    $.brx.utils.loadPage();
+                },this),
+                complete: $.proxy(function(data){
+                    this.enableInputs();
+                    this.getSpinner().hide($.proxy(this.showMessage, this));
+                },this)
+            });
+
+        },
         
         // Use the destroy method to clean up any modifications your widget has made to the DOM
         destroy: function() {

@@ -60,6 +60,7 @@ class wpp_BRX_Auth extends WpPlugin {
     protected static $instance = null;
     
     public static function init() {
+        UserModel::addJsonMetaField('fb_user_id');
         return self::$instance = $auth = new wpp_BRX_Auth(__FILE__, array('auth'));
 //        $auth->addSupport_ConsolePages();
     }
@@ -156,9 +157,28 @@ class wpp_BRX_Auth extends WpPlugin {
 ////        NlsHelper::setNlsDir(WPP_BRX_AUTH_PATH.'nls');
 //        $view->setScriptPath(WPP_BRX_AUTH_PATH.'application/views/scripts/auth');
 //        echo $view->render('fb-login-callback.phtml');
-        SocialHelper::fbInit($appId, $locale, 'onFBlogin');
+//        SocialHelper::fbInit($appId, $locale, 'onFBlogin');
     }
 
+    public static function getAvatarData($user){
+        $metaAvatar = $user->getMeta('avatar');
+        if($metaAvatar){
+            $uploadDirs = wp_upload_dir();
+            $avatarsDir = $uploadDirs['basedir'].'/avatars';
+            $avatarsUrl = $uploadDirs['baseurl'].'/avatars';
+            $avatarFn = $avatarsDir.'/'.$metaAvatar;
+            $avatarUrl = $avatarsUrl.'/'.$metaAvatar;
+            if(file_exists($avatarFn)){
+                return array(
+                    'path'=>$avatarFn,
+                    'link'=>$avatarUrl,
+                );
+            }
+        }
+        return array();
+        
+    }
+    
     public static function getAvatar($avatar, $id_or_email){
         $user = is_email($id_or_email)?
                 UserModel::selectByEmail($id_or_email):
