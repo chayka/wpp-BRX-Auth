@@ -233,16 +233,16 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action {
                 $picture = (new FacebookRequest(
                         $session, 'GET', '/me/picture?redirect=false&width=200&height=200'
                         ))->execute()->getGraphObject(GraphObject::className());
-                Util::print_r($picture);
+//                Util::print_r($picture);
                 $pictureData = $picture->asArray();
                 $pictureUrl = Util::getItem($pictureData, 'url');
                 $isSilhouette = Util::getItem($pictureData, 'is_silhouette');
                 $uploadDirs = wp_upload_dir();
-                Util::print_r($uploadDirs);
+//                Util::print_r($uploadDirs);
                 $avatarsDir = $uploadDirs['basedir'] . '/avatars';
                 is_dir($avatarsDir) || mkdir($avatarsDir, 0777, true);
                 $avatarFnShort = $userID . "@facebook.com." . FileSystem::extension($pictureUrl);
-                echo $avatarFn = $avatarsDir . '/' . $avatarFnShort;
+                $avatarFn = $avatarsDir . '/' . $avatarFnShort;
 
                 file_exists($avatarFn) && FileSystem::delete($avatarFn);
                 CurlHelper::download($avatarFn, $pictureUrl);
