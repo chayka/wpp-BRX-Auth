@@ -180,6 +180,10 @@ class wpp_BRX_Auth extends WpPlugin {
     }
     
     public static function getAvatar($avatar, $id_or_email){
+        if(!$id_or_email){
+            return $avatar;
+        }
+            
         $user = is_email($id_or_email)?
                 UserModel::selectByEmail($id_or_email):
                 UserModel::selectById($id_or_email);
