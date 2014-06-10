@@ -589,6 +589,7 @@
         buttonLogoutClicked: function() {
             
             if(this.getFB() && this.getFBuserId() && !this.get('fb_not_authorized')){
+                $.wp.currentUser.set('meta.fb_user_id', null);
                 this.getFB().logout();
             }
             
