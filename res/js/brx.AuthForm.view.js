@@ -781,16 +781,16 @@
         
         onFBlogin: function(FBResponse){
             console.dir({FBResponse: FBResponse});
-            this.getSpinner().show(this.nls('message_spinner_signout'));//'Выполняется выход...');
+            this.getSpinner().show(this.nls('message_spinner_sign_in'));//'Выполняется выход...');
 //            return; 
             this.ajax('/api/auth/fb-login', {
                 data: FBResponse.authResponse,
                 spinner: false,
                 showMessage: false,
-                errorMessage: this.nls('message_error_signing_out'),
+                errorMessage: this.nls('message_error_auth_failed'),
                 success:$.proxy(function(data){
                     console.dir({'data': data});
-                    this.setMessage(this.nls('message_signed_out'));//'Выход выполнен, до новых встреч!');
+                    this.setMessage(this.nls('message_welcome'));//'Выход выполнен, до новых встреч!');
                     $.brx.utils.loadPage();
                 },this),
                 complete: $.proxy(function(data){
