@@ -183,7 +183,7 @@ class wpp_BRX_Auth extends WpPlugin {
         if(!$id_or_email){
             return $avatar;
         }
-            
+        $id_or_email.='';
         $user = is_email($id_or_email)?
                 UserModel::selectByEmail($id_or_email):
                 UserModel::selectById($id_or_email);
