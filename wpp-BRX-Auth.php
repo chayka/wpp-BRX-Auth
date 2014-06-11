@@ -110,7 +110,8 @@ class wpp_BRX_Auth extends WpPlugin {
     
     public function registerFilters(){
 //        $this->addFilter('avatar_link', 'getAvatarLink', 10, 2);
-        $this->addAction('CommentModel.created', 'markCommentWithFbUserId');
+        $this->addFilter('CommentModel.created', 'markCommentWithFbUserId');
+        $this->addFilter('pre_comment_approved', 'approveFbUserComment', 10, 2);
     }
     
     public function registerConsolePages() {
@@ -230,6 +231,18 @@ class wpp_BRX_Auth extends WpPlugin {
             }
         }
         return $comment;        
+    }
+    
+    public function approveFbUserComment($approved, $rawComment){
+        $comment = CommentModel::unpackDbRecord($rawComment);
+        if($comment->getUserId()){
+            $user = UserModel::selectById($comment->getUserId());
+            if($user && $user->getMeta('fb_user_id')){
+                $approved = true;
+            }
+        }
+        return $approved;
+//        'pre_comment_approved'
     }
     
     public function renderLoginForm(){
