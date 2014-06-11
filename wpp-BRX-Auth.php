@@ -235,9 +235,11 @@ class wpp_BRX_Auth extends WpPlugin {
     
     public function approveFbUserComment($approved, $rawComment){
         $comment = CommentModel::unpackDbRecord($rawComment);
+        Util::print_r($comment);
         if($comment->getUserId()){
             $user = UserModel::selectById($comment->getUserId());
             if($user && $user->getMeta('fb_user_id')){
+                echo ' approved ';
                 $approved = true;
             }
         }
