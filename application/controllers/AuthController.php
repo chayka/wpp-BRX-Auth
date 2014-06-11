@@ -7,29 +7,29 @@
  */
 require_once 'application/helpers/EmailHelper_wpp_BRX_Auth.php';
 
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookSDKException.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookRequestException.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookAuthorizationException.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookCanvasLoginHelper.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookClientException.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookHttpable.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookCurl.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookCurlHttpClient.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookJavaScriptLoginHelper.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookOtherException.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookPageTabHelper.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookPermissionException.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookRedirectLoginHelper.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookRequest.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookResponse.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookServerException.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookSession.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/FacebookThrottleException.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/GraphObject.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/GraphAlbum.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/GraphLocation.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/GraphSessionInfo.php';
-require_once 'facebook-php-sdk-v4/src/Facebook/GraphUser.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookSDKException.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookRequestException.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookAuthorizationException.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookCanvasLoginHelper.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookClientException.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookHttpable.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookCurl.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookCurlHttpClient.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookJavaScriptLoginHelper.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookOtherException.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookPageTabHelper.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookPermissionException.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookRedirectLoginHelper.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookRequest.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookResponse.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookServerException.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookSession.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/FacebookThrottleException.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/GraphObject.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/GraphAlbum.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/GraphLocation.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/GraphSessionInfo.php';
+//require_once 'facebook-php-sdk-v4/src/Facebook/GraphUser.php';
 
 use Facebook\FacebookSession;
 use Facebook\FacebookRequest;
@@ -222,6 +222,7 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action {
                         ->setDisplayName($me->getName())
                         ->setFirstName($me->getFirstName())
                         ->setLastName($me->getLastName())
+                        ->setNicename(strtolower(join('.', array($me->getFirstName(), $me->getLastName()))))
                         ->setPassword(wp_generate_password(12, false))
                         ->insert();
                 if ($wpUserId) {

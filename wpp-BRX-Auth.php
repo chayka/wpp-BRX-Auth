@@ -62,6 +62,7 @@ class wpp_BRX_Auth extends WpPlugin {
     public static function init() {
         UserModel::addJsonMetaField('fb_user_id');
         CommentModel::addJsonMetaField('fb_user_id');
+        SocialHelper::fbRegisterAutoloader();
         return self::$instance = $auth = new wpp_BRX_Auth(__FILE__, array('auth'));
 //        $auth->addSupport_ConsolePages();
     }
