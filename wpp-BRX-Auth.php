@@ -60,7 +60,8 @@ class wpp_BRX_Auth extends WpPlugin {
     protected static $instance = null;
     
     public static function init() {
-        UserModel::addJsonMetaField('fb_user_id');
+//        UserModel::addJsonMetaField('fb_user_id');
+        CommentModel::addJsonMetaField('fb_user_id');
         return self::$instance = $auth = new wpp_BRX_Auth(__FILE__, array('auth'));
 //        $auth->addSupport_ConsolePages();
     }
@@ -108,8 +109,10 @@ class wpp_BRX_Auth extends WpPlugin {
     }
     
     public function registerFilters(){
-        
+//        $this->addFilter('avatar_link', 'getAvatarLink', 10, 2);
+        $this->addAction('CommentModel.created', 'markCommentWithFbUserId');
     }
+    
     public function registerConsolePages() {
         $this->addConsolePage('Аутентификация', 'Аутентификация', 'update_core', 'authentification-admin', '/admin/setup-authentification');
     }
@@ -160,26 +163,34 @@ class wpp_BRX_Auth extends WpPlugin {
 //        SocialHelper::fbInit($appId, $locale, 'onFBlogin');
     }
 
-    public static function getAvatarData($user){
-        $metaAvatar = $user->getMeta('avatar');
-        if($metaAvatar){
-            $uploadDirs = wp_upload_dir();
-            $avatarsDir = $uploadDirs['basedir'].'/avatars';
-            $avatarsUrl = $uploadDirs['baseurl'].'/avatars';
-            $avatarFn = $avatarsDir.'/'.$metaAvatar;
-            $avatarUrl = $avatarsUrl.'/'.$metaAvatar;
-            if(file_exists($avatarFn)){
-                return array(
-                    'path'=>$avatarFn,
-                    'link'=>$avatarUrl,
-                );
-            }
-        }
-        return array();
-        
-    }
+//    public static function getAvatarData($user){
+//        $metaAvatar = $user->getMeta('avatar');
+//        if($metaAvatar){
+//            $uploadDirs = wp_upload_dir();
+//            $avatarsDir = $uploadDirs['basedir'].'/avatars';
+//            $avatarsUrl = $uploadDirs['baseurl'].'/avatars';
+//            $avatarFn = $avatarsDir.'/'.$metaAvatar;
+//            $avatarUrl = $avatarsUrl.'/'.$metaAvatar;
+////            if(file_exists($avatarFn)){
+//                return array(
+//                    'path'=>$avatarFn,
+//                    'link'=>$avatarUrl,
+//                );
+////            }
+//        }
+//        return array();
+//        
+//    }
+//    
+//    public static function getAvatarLink($url, $user){
+//        return Util::getItem(self::getAvatarData($user), 'link', $link);
+//    }
+//    
+//    public static function getAvatarPath($path, $user){
+//        return Util::getItem(self::getAvatarData($user), 'path', $path);
+//    }
     
-    public static function getAvatar($avatar, $id_or_email){
+    public static function getAvatar($avatar, $id_or_email, $size = 96){
         if(!$id_or_email){
             return $avatar;
         }
@@ -192,27 +203,33 @@ class wpp_BRX_Auth extends WpPlugin {
                     UserModel::selectById($id_or_email);
         }
         if($user){
-            $metaAvatar = $user->getMeta('avatar');
-            if($metaAvatar){
-                $uploadDirs = wp_upload_dir();
-                $avatarsDir = $uploadDirs['basedir'].'/avatars';
-                $avatarsUrl = $uploadDirs['baseurl'].'/avatars';
-                $avatarFn = $avatarsDir.'/'.$metaAvatar;
-                $avatarUrl = $avatarsUrl.'/'.$metaAvatar;
-                if(file_exists($avatarFn)){
-                    return preg_replace("%src='[^']*'%", "src='$avatarUrl'", $avatar);
-                }else{
-//                    return preg_replace("%alt='[^']*'%", "alt='file not found'", $avatar);
+            $metaFbUseId = $user->getMeta('fb_user_id');
+            if($metaFbUseId){
+                if(!intval($size)){
+                    $size = 96;
                 }
-            }else{
-//                return preg_replace("%alt='[^']*'%", "alt='no fb avatar'", $avatar);
-                
+                $avatarUrl = sprintf('//graph.facebook.com/%s/picture?type=square&width=%d&height=%d', $metaFbUseId, (int)$size, $size);
+                return preg_replace("%src='[^']*'%", "src='$avatarUrl'", $avatar);
             }
         }else{
 //            return preg_replace("%alt='[^']*'%", "alt='user not found'", $avatar);
         }
         
         return $avatar;
+    }
+    /**
+     * 
+     * @param CommentModel $comment
+     * @return CommentModel
+     */
+    public function markCommentWithFbUserId($comment){
+        if($comment->getUserId()){
+            $user = UserModel::selectById($comment->getUserId());
+            if($user && $user->getMeta('fb_user_id')){
+                $comment->updateMeta('fb_user_id', $user->getMeta('fb_user_id'));
+            }
+        }
+        return $comment;        
     }
     
     public function renderLoginForm(){

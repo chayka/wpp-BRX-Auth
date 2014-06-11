@@ -228,32 +228,30 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action {
                     $user->updateMeta('fb_user_id', $userID);
                 }
             }
-            $avatarFnShort = null;
-            try {
-                $picture = (new FacebookRequest(
-                        $session, 'GET', '/me/picture?redirect=false&width=200&height=200'
-                        ))->execute()->getGraphObject(GraphObject::className());
-//                Util::print_r($picture);
-                $pictureData = $picture->asArray();
-                $pictureUrl = Util::getItem($pictureData, 'url');
-                $isSilhouette = Util::getItem($pictureData, 'is_silhouette');
-                $uploadDirs = wp_upload_dir();
-//                Util::print_r($uploadDirs);
-                $avatarsDir = $uploadDirs['basedir'] . '/avatars';
-                is_dir($avatarsDir) || mkdir($avatarsDir, 0777, true);
-                $avatarFnShort = $userID . "@facebook.com." . FileSystem::extension($pictureUrl);
-                $avatarFn = $avatarsDir . '/' . $avatarFnShort;
-
-                file_exists($avatarFn) && FileSystem::delete($avatarFn);
-                CurlHelper::download($avatarFn, $pictureUrl);
-                $user->updateMeta('avatar', $avatarFnShort);
-            } catch (FacebookRequestException $e) {
-                // The Graph API returned an error
-//                JsonHelper::respondException($e);
-            } catch (\Exception $e) {
-                // Some other error occurred
-//                JsonHelper::respondException($e);
-            }
+//            $avatarFnShort = null;
+//            try {
+//                $picture = (new FacebookRequest(
+//                        $session, 'GET', '/me/picture?redirect=false&width=200&height=200'
+//                        ))->execute()->getGraphObject(GraphObject::className());
+//                $pictureData = $picture->asArray();
+//                $pictureUrl = Util::getItem($pictureData, 'url');
+//                $isSilhouette = Util::getItem($pictureData, 'is_silhouette');
+//                $uploadDirs = wp_upload_dir();
+//                $avatarsDir = $uploadDirs['basedir'] . '/avatars';
+//                is_dir($avatarsDir) || mkdir($avatarsDir, 0777, true);
+//                $avatarFnShort = $userID . "@facebook.com." . FileSystem::extension($pictureUrl);
+//                $avatarFn = $avatarsDir . '/' . $avatarFnShort;
+//
+//                file_exists($avatarFn) && FileSystem::delete($avatarFn);
+//                CurlHelper::download($avatarFn, $pictureUrl);
+//                $user->updateMeta('avatar', $avatarFnShort);
+//            } catch (FacebookRequestException $e) {
+//                // The Graph API returned an error
+////                JsonHelper::respondException($e);
+//            } catch (\Exception $e) {
+//                // Some other error occurred
+////                JsonHelper::respondException($e);
+//            }
             $secure_cookie = is_ssl();
             $user = UserModel::selectById($user->getId());
             wp_set_auth_cookie($user->getId(), false, $secure_cookie);
