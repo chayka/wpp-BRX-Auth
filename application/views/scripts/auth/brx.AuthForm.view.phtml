@@ -21,7 +21,8 @@ NlsHelper::load('views/auth/authForm');
             <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
             <div class="social_logins" data-attach-point="socialBox">
                 <h2>Войти через социальные сети:</h2>
-                <div class="fb-login-button" data-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false"></div>
+                <?php WidgetHelper_brx_Facebook::renderAuth();?>
+                <!--<div class="fb-login-button" data-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false" data-scope='basic_info,email'></div>-->
                 <div class="or_common">или</div>
                 <!--<button data-attach-event="onFacebookLoginButtonClicked">Facebook</button>-->
             </div>

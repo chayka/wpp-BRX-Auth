@@ -60,9 +60,6 @@ class wpp_BRX_Auth extends WpPlugin {
     protected static $instance = null;
     
     public static function init() {
-        UserModel::addJsonMetaField('fb_user_id');
-        CommentModel::addJsonMetaField('fb_user_id');
-        SocialHelper::fbRegisterAutoloader();
         return self::$instance = $auth = new wpp_BRX_Auth(__FILE__, array('auth'));
 //        $auth->addSupport_ConsolePages();
     }
@@ -111,8 +108,6 @@ class wpp_BRX_Auth extends WpPlugin {
     
     public function registerFilters(){
 //        $this->addFilter('avatar_link', 'getAvatarLink', 10, 2);
-        $this->addFilter('CommentModel.created', 'markCommentWithFbUserId');
-        $this->addFilter('pre_comment_approved', 'approveFbUserComment', 10, 2);
     }
     
     public function registerConsolePages() {
@@ -156,98 +151,7 @@ class wpp_BRX_Auth extends WpPlugin {
             die();
         }
     }
-    
-    public static function renderFbInit($appId = 'YOUR_APP_ID', $locale = 'en_US'){
-//        $view = new Zend_View();
-////        NlsHelper::setNlsDir(WPP_BRX_AUTH_PATH.'nls');
-//        $view->setScriptPath(WPP_BRX_AUTH_PATH.'application/views/scripts/auth');
-//        echo $view->render('fb-login-callback.phtml');
-//        SocialHelper::fbInit($appId, $locale, 'onFBlogin');
-    }
-
-//    public static function getAvatarData($user){
-//        $metaAvatar = $user->getMeta('avatar');
-//        if($metaAvatar){
-//            $uploadDirs = wp_upload_dir();
-//            $avatarsDir = $uploadDirs['basedir'].'/avatars';
-//            $avatarsUrl = $uploadDirs['baseurl'].'/avatars';
-//            $avatarFn = $avatarsDir.'/'.$metaAvatar;
-//            $avatarUrl = $avatarsUrl.'/'.$metaAvatar;
-////            if(file_exists($avatarFn)){
-//                return array(
-//                    'path'=>$avatarFn,
-//                    'link'=>$avatarUrl,
-//                );
-////            }
-//        }
-//        return array();
-//        
-//    }
-//    
-//    public static function getAvatarLink($url, $user){
-//        return Util::getItem(self::getAvatarData($user), 'link', $link);
-//    }
-//    
-//    public static function getAvatarPath($path, $user){
-//        return Util::getItem(self::getAvatarData($user), 'path', $path);
-//    }
-    
-    public static function getAvatar($avatar, $id_or_email, $size = 96){
-        if(!$id_or_email){
-            return $avatar;
-        }
-        $user = null;
-        if(is_object($id_or_email)){
-            $user = UserModel::unpackDbRecord($id_or_email);
-        }else{
-            $user = is_email($id_or_email)?
-                    UserModel::selectByEmail($id_or_email):
-                    UserModel::selectById($id_or_email);
-        }
-        if($user){
-            $metaFbUseId = $user->getMeta('fb_user_id');
-            if($metaFbUseId){
-                if(!intval($size)){
-                    $size = 96;
-                }
-                $avatarUrl = sprintf('//graph.facebook.com/%s/picture?type=square&width=%d&height=%d', $metaFbUseId, (int)$size, $size);
-                return preg_replace("%src='[^']*'%", "src='$avatarUrl'", $avatar);
-            }
-        }else{
-//            return preg_replace("%alt='[^']*'%", "alt='user not found'", $avatar);
-        }
         
-        return $avatar;
-    }
-    /**
-     * 
-     * @param CommentModel $comment
-     * @return CommentModel
-     */
-    public function markCommentWithFbUserId($comment){
-        if($comment->getUserId()){
-            $user = UserModel::selectById($comment->getUserId());
-            if($user && $user->getMeta('fb_user_id')){
-                $comment->updateMeta('fb_user_id', $user->getMeta('fb_user_id'));
-            }
-        }
-        return $comment;        
-    }
-    
-    public function approveFbUserComment($approved, $rawComment){
-//        $comment = CommentModel::unpackDbRecord($rawComment);
-//        Util::print_r($comment);
-        $userId = Util::getItem($rawComment, 'user_id');
-        if($userId){
-            $user = UserModel::selectById($userId);
-            if($user && $user->getMeta('fb_user_id')){
-//                echo ' approved ';
-                $approved = true;
-            }
-        }
-        return $approved;
-//        'pre_comment_approved'
-    }
     
     public function renderLoginForm(){
         $view = new Zend_View();
