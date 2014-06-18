@@ -587,13 +587,13 @@
         },
         
         buttonLogoutClicked: function() {
-            
 //            if(this.getFB() && this.getFBuserId() && !this.get('fb_not_authorized')){
 //                $.wp.currentUser.set('meta.fb_user_id', null);
 //                this.getFB().logout();
 //            }
             
             if(true){
+                $(document).trigger('logout');
                 this.disableInputs();
                 this.getSpinner().show(this.nls('message_spinner_signout'));//'Выполняется выход...');
                 
