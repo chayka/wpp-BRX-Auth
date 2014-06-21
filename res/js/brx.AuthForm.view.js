@@ -141,6 +141,7 @@
             
             $.brx.Ajax.addErrorHandler('authform', $.proxy(this.handleApiError, this));
             
+            $(document).on('Facebook.Auth.userLoggedIn', $.proxy(this.buttonCloseClicked()));
 //            this.getFB();
         },
         
