@@ -429,7 +429,19 @@
             
         },
         
-        
+        onUserChanged: function(userAttribs){
+            if(!userAttribs){
+                return;
+            }
+            if($.wp && $.wp.currentUser){
+                $.wp.currentUser.set(userAttribs);
+            }
+            $(document).trigger('userChanged', userAttribs);
+            setTimeout($.proxy(function(){
+                console.log('!!!!');
+                this.getWindow().close();
+            }, this), 1200);
+        },
         
         buttonLoginClicked: function(event){
             console.info('sss');
@@ -451,7 +463,8 @@
                     success: $.proxy(function(data){
                         console.dir({'data': data});
                         this.setMessage(this.nls('message_welcome'));//'Вход выполнен, добро пожаловать!');
-                        $.brx.utils.loadPage();
+                        this.onUserChanged(data.payload);
+//                        $.brx.utils.loadPage();
                     }, this),
                     complete: $.proxy(function(){
                         this.enableInputs();
@@ -542,7 +555,8 @@
                         this.option('key',  null);
                         this.option('login',  null);
                         this.setMessage(this.nls('message_password_set_signing_in'));//'Пароль изменен, выполняется вход');
-                        $.brx.utils.loadPage();
+                        this.onUserChanged(data.payload);
+//                        $.brx.utils.loadPage();
                     },this),
                     complete: $.proxy(function(data){
                         this.enableInputs();
@@ -573,6 +587,7 @@
                     success: $.proxy(function(data){
                         console.dir({'data': data});
                         this.getWindow().close();
+                        this.onUserChanged(data.payload);
                         $.brx.Modals.alert(this.nls('message_password_changed'));
 //                        $.brx.modalAlert(this.nls('message_password_changed'));//'Пароль изменен');
 //                        this.getTemplate().dialog('close');
@@ -607,7 +622,8 @@
                     success:$.proxy(function(data){
                         console.dir({'data': data});
                         this.setMessage(this.nls('message_signed_out'));//'Выход выполнен, до новых встреч!');
-                        $.brx.utils.loadPage();
+                        this.onUserChanged(data.payload);
+//                        $.brx.utils.loadPage();
                     },this),
                     complete: $.proxy(function(data){
                         this.enableInputs();
@@ -704,11 +720,12 @@
         },
 
         
-        handleApiError: function(code, message){
+        handleApiError: function(code, message, payload){
             switch(code){
                 case 'auth_required':
                     message = message || 
                     this.nls('message_auth_required');//'Для выполнения данной операции необходимо авторизоваться на сайте';
+                    this.onUserChanged(payload);
                     $.brx.Modals.show({
                         content: message,
                         title: this.nls('dialog_title_auth_required'),
@@ -725,6 +742,7 @@
                     });
                     return true;
                 case 'permission_required':
+                    this.onUserChanged(payload);
                     message = message || 
                     this.nls('message_permission_required');//'У вас недостаточно прав для выполнения данной операции';
                     $.brx.Modals.alert(message);

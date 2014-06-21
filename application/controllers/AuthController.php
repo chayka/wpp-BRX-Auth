@@ -282,7 +282,8 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action {
             $this->outputErrors($errors);
         } else {
             wp_logout();
-            JsonHelper::respond();
+            $user = new UserModel();
+            JsonHelper::respond($user);
             exit();
         }
     }
@@ -380,7 +381,7 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action {
                 ));
                 EmailHelper_wpp_BRX_Auth::newPassword($user, $pass1);
                 session_commit();
-                JsonHelper::respond();
+                JsonHelper::respond($user);
             }
         }
 
@@ -415,7 +416,7 @@ class wpp_BRX_Auth_AuthController extends Zend_Controller_Action {
                 ));
                 EmailHelper_wpp_BRX_Auth::newPassword($user, $pass1);
 //                $user->checkPassword($pass1);
-                JsonHelper::respond();
+                JsonHelper::respond($user);
             }
         }
         $errors = new WP_Error('passwords_required', NlsHelper::_('error_passwords_required'));
