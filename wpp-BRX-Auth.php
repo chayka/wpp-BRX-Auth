@@ -86,14 +86,12 @@ class wpp_BRX_Auth extends WpPlugin {
 
     public function registerResources($minimize = false){
 //        NlsHelper::setCurrentPlugin(__FILE__);
-        NlsHelper::registerScriptNls('jquery-brx-authForm-nls', 'jquery.brx.authForm.js');
-        NlsHelper::registerScriptNls('backbone-brx-authForm-nls', 'brx.AuthForm.view.js');
+        NlsHelper::registerScriptNls('brx.AuthForm.nls', 'brx.AuthForm.view.js');
         if($this->needStyles){
-            $this->registerStyle('jquery-brx-authForm', 'bem-authForm.less', array('backbone-brx-spinners'));
-            wp_enqueue_style('jquery-brx-authForm');
+            $this->registerStyle('brx.AuthForm', 'brx.AuthForm.view.less', array('backbone-brx-spinners'));
+            wp_enqueue_style('brx.AuthForm');
         }
-        $this->registerScript('jquery-brx-authForm', 'jquery.brx.authForm.js', array('jquery-brx-form', 'jquery-brx-authForm-nls'));
-        $this->registerScript('backbone-brx-authForm', 'brx.AuthForm.view.js', array('backbone-brx', 'jquery-brx-utils', 'backbone-brx-spinners', 'jquery-brx-placeholder', 'backbone-brx-authForm-nls'));
+        $this->registerScript('brx.AuthForm', 'brx.AuthForm.view.js', array('backbone-brx', 'jquery-brx-utils', 'backbone-brx-spinners', 'jquery-brx-placeholder', 'brx.AuthForm.nls'));
     }
     
     public function registerActions(){
@@ -184,9 +182,8 @@ class wpp_BRX_Auth extends WpPlugin {
 //            echo "<div widget=\"loginForm\"></div>";
             echo $view->render($t);
         }
-        wp_enqueue_style('jquery-brx-authForm');
-        wp_enqueue_script('backbone-brx-authForm');
-//        wp_print_scripts(array('jquery-brx-authForm'));
+        wp_enqueue_style('brx.AuthForm');
+        wp_enqueue_script('brx.AuthForm');
     }
     
     public function deletePost($postId, $post) {

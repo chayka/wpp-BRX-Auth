@@ -96,24 +96,72 @@
     }
     .screen_login{
         .social_logins{
-            display: none;
+            /*display: none;*/
             margin-bottom: 20px;
-            border-bottom: 1px solid black;
+            /*border-bottom: 1px solid black;*/
             text-align: center;
             h2{
                 display: block !important;
                 line-height: normal;
                 margin: 0 0 1em;
+                font-weight: lighter;
+                font-size: 16px;
             }
-            .fb-login-button{
-                margin: 0 auto;
+            .buttons{
+                margin: 0 0 1em;
+                
+                li{
+                    list-style: none;
+                    a{
+                        display: inline-block;
+                        background-size: 20px 20px;
+                        background-position: 6px 6px;
+                        background-repeat: no-repeat;
+                        text-decoration: none;
+                        color: white;
+                        line-height: 32px;
+                        padding: 0 6px 0 32px;
+                        width: 100px;
+                        text-align: center;
+                        .border-radius(4px); 
+                    }
+                }
+                .facebook{
+                    a{
+                        background-image: url('../img/fb40x40.png');
+                        background-color: rgb(76, 102, 164);
+                        
+                    }
+                }
+                
             }
             .or_common{
-                position: relative;
+                display: inline;
+                /*position: relative;*/
                 font-size: 16px;
-                padding: 10px;
-                top: .5em;
+                padding: 10px 0;
+                /*top: .5em;*/
+                /*clear: both;*/
             }
+            
+            .or_common::before, .or_common::after{
+                width: 40%;
+                height: 1px;
+                display: inline-block;
+                border-bottom: 1px dotted black;
+                content:'';
+                position: relative;
+                top: 1ex;
+            }
+            .or_common::before{
+                margin-right: 10px;
+                float:left;
+            }
+            .or_common::after{
+                margin-left: 10px;
+                float:right;
+            }
+            
         }
 /*        width: 710px;
         .social_login_box{

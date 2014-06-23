@@ -8,24 +8,28 @@ $this->declareVars(array(
 ));
 NlsHelper::load('views/auth/authForm');
 
+$isFbApiAvailable = class_exists('FacebookHelper');
+
+$areSocialsAvailable = $isFbApiAvailable;
+
 ?>
 <div class="bem-modal_auth_form" data-view="brx.AuthForm" data-titleLocation="<?php echo $this->titleLocation;?>" data-popup="<?php echo $this->popup;?>" data-screen="<?php echo $this->screen;?>" data-key="<?php echo $this->key;?>" data-login="<?php echo $this->login;?>" <?php HtmlHelper::hidden();?>>
     <div class="form_screen screen_login" data-attach-point="screens.login" screen-title="<?php NlsHelper::__('header_login_screen');?>">
         <h2><?php NlsHelper::__('header_login_screen');?></h2>
-        <!--div class="social_login_box">
-            <button>facebook</button>
-            <button>vkontakte</button>
-            <button>linkedin</button>
-        </div-->
         <form data-attach-point="formLogin" data-attach-event="submit: buttonLoginClicked">
             <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
+            <?php if($areSocialsAvailable):?>
             <div class="social_logins" data-attach-point="socialBox">
                 <h2>Войти через социальную сеть:</h2>
-                <?php WidgetHelper_brx_Facebook::renderAuth();?>
-                <!--<div class="fb-login-button" data-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false" data-scope='basic_info,email'></div>-->
+                <ul class="buttons">
+                <?php if($isFbApiAvailable):?>   
+                    <li class="facebook"><a href="#facebook-login">Facebook</a></li>
+                <?php endif;?>    
+                </ul>
                 <div class="or_common">или</div>
                 <!--<button data-attach-event="onFacebookLoginButtonClicked">Facebook</button>-->
             </div>
+            <?php endif;?>
             <div class="form_field email_login" data-attach-point="fields.email1" data-check-email="<?php NlsHelper::__('message_validate_email', 'member@'.Util::serverName())?>" data-check-required="<?php NlsHelper::__('message_required');?>">
                 <label for="email"><?php NlsHelper::__('label_email')?>:</label>
                 <div class="form_field-input_box">
@@ -141,4 +145,6 @@ NlsHelper::load('views/auth/authForm');
         <span data-attach-point="links.changePassword" data-attach-event="click: showChangePasswordScreen" class="link" ><?php NlsHelper::__('link_change_password');?></span>
     </div>
     <div class="clearfloat"></div>
+    <?php if($isFbApiAvailable){ WidgetHelper_brx_Facebook::renderAuth(); }?>    
+
 </div>
