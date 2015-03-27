@@ -10,8 +10,9 @@ class EmailHelper_wpp_BRX_Auth extends EmailHelper {
             $html->assign($key, $value);
         }
         
-        $body = $html->render($template);
-        return EmailHelper::send($subject, $body, $to, $from, $cc, $bcc);
+        $content = $html->render($template);
+        $content = apply_filters_ref_array('EmailHelper_wpp_BRX_Auth.sendTemplate', array($content, $template, $params));
+        return EmailHelper::send($subject, $content, $to, $from, $cc, $bcc);
     }
     
     public static function userRegistered($user, $password){
