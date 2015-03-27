@@ -5,6 +5,7 @@ $this->declareVars(array(
     'screen'=>'login',
     'key'=>'',
     'login'=>'',
+    'authMode'=>'reload',
 ));
 NlsHelper::load('views/auth/authForm');
 
@@ -13,7 +14,7 @@ $isFbApiAvailable = class_exists('FacebookHelper');
 $areSocialsAvailable = $isFbApiAvailable;
 
 ?>
-<div class="bem-modal_auth_form" data-view="brx.AuthForm" data-titleLocation="<?php echo $this->titleLocation;?>" data-popup="<?php echo $this->popup;?>" data-screen="<?php echo $this->screen;?>" data-key="<?php echo $this->key;?>" data-login="<?php echo $this->login;?>" <?php HtmlHelper::hidden();?>>
+<div class="bem-modal_auth_form" data-view="brx.AuthForm" data-titleLocation="<?php echo $this->titleLocation;?>" data-popup="<?php echo $this->popup;?>" data-screen="<?php echo $this->screen;?>" data-key="<?php echo $this->key;?>" data-login="<?php echo $this->login;?>" data-authMode="<?php echo $this->authMode;?>" <?php HtmlHelper::hidden();?>>
     <div class="form_screen screen_login" data-attach-point="screens.login" screen-title="<?php NlsHelper::__('header_login_screen');?>">
         <h2><?php NlsHelper::__('header_login_screen');?></h2>
         <form data-attach-point="formLogin" data-attach-event="submit: buttonLoginClicked">

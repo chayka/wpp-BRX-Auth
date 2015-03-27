@@ -1,0 +1,24 @@
+<div class="wrap bem-zf_core-admin">
+    <div id="icon-options-general" class="icon32">
+        <br/>
+    </div>
+    <h2>Настройки</h2>
+</div>
+
+<div class="brx-options_form " backbone-view="brx.OptionsForm" scope="" prefix="wpp_BRX_Auth" style="display: none;">
+    <div class="form_fields">
+        <div class="form_field stretch field_auth_mode" attachpoint="fields.authMode">
+            <label class="width35">После авторизации:</label>
+            <span class="form_field-input_box">
+                <select>
+                    <option value="reload">Перезагрузить страницу</option>
+                    <option value="event">Оповестить событием</option>
+                </select>
+            </span>
+            <div class="form_field-tips"></div>
+        </div>
+    </div>
+    <div class="button_pane">
+        <button class="button button-large button-primary" attachevent="saveOptions">Применить</button>
+    </div>
+</div>

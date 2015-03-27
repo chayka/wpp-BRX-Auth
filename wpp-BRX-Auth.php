@@ -48,7 +48,7 @@ if(!defined('ZF_CORE_PATH')){
 //define( 'WPP_BRX_AUTH_URL', preg_replace('%^[\w\d]+\:\/\/[\w\d\.]+%', '',plugin_dir_url(__FILE__)) );
 
 //require_once 'application/helpers/UrlHelper_wpp_BRX_Auth.php';
-//require_once 'application/helpers/OptionHelper_wpp_BRX_Auth.php';
+require_once 'application/helpers/OptionHelper_wpp_BRX_Auth.php';
 //require_once 'widgets-wpp_BRX_Auth.php';
 
 //ZF_Query::registerApplication('WPP_BRX_AUTH', WPP_BRX_AUTH_PATH.'application', 
@@ -60,8 +60,9 @@ class wpp_BRX_Auth extends WpPlugin {
     protected static $instance = null;
     
     public static function init() {
-        return self::$instance = $auth = new wpp_BRX_Auth(__FILE__, array('auth'));
-//        $auth->addSupport_ConsolePages();
+        self::$instance = $auth = new wpp_BRX_Auth(__FILE__, array('auth'));
+        $auth->addSupport_ConsolePages();
+        return self::$instance;
     }
 
     /**
@@ -109,7 +110,7 @@ class wpp_BRX_Auth extends WpPlugin {
     }
     
     public function registerConsolePages() {
-        $this->addConsolePage('Аутентификация', 'Аутентификация', 'update_core', 'authentification-admin', '/admin/setup-authentification');
+        $this->addConsolePage('Аутентификация', 'Аутентификация', 'update_core', 'authentification-admin', '/admin/options');
     }
 
 
@@ -151,8 +152,9 @@ class wpp_BRX_Auth extends WpPlugin {
     }
         
     
-    public function renderLoginForm(){
+    public function renderLoginForm($authMode = ''){
         $view = new Zend_View();
+        $authMode = $authMode?$authMode:OptionHelper_wpp_BRX_Auth::getOption('authMode', 'reload');
         NlsHelper::setNlsDir(WPP_BRX_AUTH_PATH.'nls');
         $view->setScriptPath(WPP_BRX_AUTH_PATH.'application/views/scripts/auth');
 //        $t = 'jquery.brx.authForm.phtml';
@@ -168,6 +170,7 @@ class wpp_BRX_Auth extends WpPlugin {
                 $view->login = $_SESSION['activationlogin'];
                 $view->popup = empty($_SESSION['activationpopup'])?'':'true';
                 $view->screen = "changePassword";
+                $view->authMode = $authMode;
                 unset($_SESSION['activationpopup']);
 //                echo "<div widget=\"loginForm\" key=\"$key\" login=\"$login\" popup=\"$popup\" screen=\"changePassword\"></div>";
                 echo $view->render($t);

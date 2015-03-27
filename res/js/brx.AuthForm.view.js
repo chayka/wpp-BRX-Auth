@@ -18,6 +18,7 @@
             wpnonce: '',
             screens:{},
             titleLocation: 'screen',
+            authMode: 'reload'
 //            fb: null
         },
 
@@ -135,6 +136,12 @@
             $(document).bind('authForm.join', $.proxy(this.openJoinScreen, this));
             $(document).bind('authForm.forgotPassword', $.proxy(this.openForgotPasswordScreen, this));
             $(document).bind('authForm.changePassword', $.proxy(this.openChangePasswordScreen, this));
+            
+            if('reload' === this.get('authMode')){
+                $(document).on('userChanged', function(){
+                    document.location.reload();
+                });
+            }
             
 
             this.showScreen(this.get('screen'));
